@@ -1,0 +1,7 @@
+# Dependências (quando o backend começar a usar Node.js, etc...)
+node_modules/
+
+# Variáveis de ambiente quando usarmos elas.
+# OBS: Ainda sem nenhuma variável de ambiente no projeto e nem o arquivo .env
+# NUNCA COMMITAR O .ENV
+.env

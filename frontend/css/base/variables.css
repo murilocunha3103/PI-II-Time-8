@@ -1,0 +1,42 @@
+/* Cores, fontes e espaçamentos padrão do projeto padronizados através de variáveis */
+/* As regras de quando usar cada uma estão em docs/design.md (arquivo com as regras de design do projeto)*/
+
+:root {
+  /* Cores principais do sistema */
+  --cor-primaria: #2F5FF6;
+  --cor-primaria-escura: #1F3FCB;
+  --cor-fundo: #F5F7FB;
+  --cor-fundo-card: #FFFFFF;
+  --cor-texto: #1A1D29;
+  --cor-texto-claro: #6B7280;
+  --cor-borda: #E2E5EC;
+
+  /* Cores de prioridade da demanda */
+  --cor-prioridade-critica: #DC2626;
+  --cor-prioridade-alta: #F97316;
+  --cor-prioridade-media: #EAB308;
+  --cor-prioridade-baixa: #22C55E;
+
+  /* Cores de status da demanda */
+  --cor-status-aberta: #6B7280;
+  --cor-status-andamento: #2F5FF6;
+  --cor-status-revisao: #EAB308;
+  --cor-status-concluida: #22C55E;
+  --cor-status-cancelada: #DC2626;
+
+  /* Fonte */
+  --fonte-padrao: 'Inter', Arial, sans-serif;
+
+  /* Tamanhos de texto */
+  --tamanho-titulo-grande: 28px;
+  --tamanho-titulo-medio: 20px;
+  --tamanho-titulo-pequeno: 16px;
+  --tamanho-texto: 15px;
+  --tamanho-texto-pequeno: 13px;
+
+  /* Espaçamentos */
+  --espaco-pequeno: 8px;
+  --espaco-medio: 16px;
+  --espaco-grande: 24px;
+  --espaco-extra-grande: 32px;
+}

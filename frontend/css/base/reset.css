@@ -1,0 +1,15 @@
+/* Reset básico (boa prática): remove margens e espaçamentos padrão que cada navegador aplica */
+/* diferente, pra gente começar todas as páginas do mesmo jeito */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--fonte-padrao);
+  font-size: var(--tamanho-texto);
+  color: var(--cor-texto);
+  background-color: var(--cor-fundo);
+}
