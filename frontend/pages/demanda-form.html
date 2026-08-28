@@ -3,11 +3,81 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Acompanhamento de Demandas</title>
+  <title>Nova Demanda - Sistema de Acompanhamento de Demandas</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/pages/demanda-form.css">
 </head>
 <body>
+
+  <header class="barra-navegacao">
+    <span class="nome-sistema">Demandas PI-II</span>
+    <nav class="links-navegacao">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="demandas-lista.html" class="link-ativo">Demandas</a>
+    </nav>
+    <span class="usuario-logado">Nome do Usuário</span>
+  </header>
+
+  <main class="conteudo">
+
+    <h1>Nova demanda</h1>
+
+    <form class="caixa-formulario">
+
+      <div class="campo">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" name="titulo" placeholder="Ex: Corrigir erro no login">
+      </div>
+
+      <div class="campo">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" name="descricao" rows="4" placeholder="Descreva a demanda"></textarea>
+      </div>
+
+      <div class="campo">
+        <label for="tipo">Tipo</label>
+        <select id="tipo" name="tipo">
+          <option value="tarefa">Tarefa</option>
+          <option value="defeito">Defeito</option>
+          <option value="melhoria">Melhoria</option>
+          <option value="documentacao">Documentação</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="prioridade">Prioridade</label>
+        <select id="prioridade" name="prioridade">
+          <option value="baixa">Baixa</option>
+          <option value="media">Média</option>
+          <option value="alta">Alta</option>
+          <option value="critica">Crítica</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="responsavel">Responsável</label>
+        <select id="responsavel" name="responsavel">
+          <option value="">Sem responsável definido</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="prazo">Prazo de finalização</label>
+        <input type="date" id="prazo" name="prazo">
+      </div>
+
+      <div class="linha-botoes">
+        <button type="submit" class="botao-salvar">Salvar demanda</button>
+        <a href="demandas-lista.html" class="botao-cancelar">Cancelar</a>
+      </div>
+
+    </form>
+
+  </main>
 
 </body>
 </html>
