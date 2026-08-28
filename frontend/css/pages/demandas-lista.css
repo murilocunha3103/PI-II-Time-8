@@ -1,1 +1,137 @@
 /* CSS da tela: demandas-lista */
+.barra-navegacao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--cor-fundo-card);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: var(--espaco-medio) var(--espaco-grande);
+}
+
+.nome-sistema {
+  font-size: var(--tamanho-titulo-pequeno);
+  font-weight: 700;
+  color: var(--cor-texto);
+}
+
+.links-navegacao {
+  display: flex;
+  gap: var(--espaco-grande);
+}
+
+.links-navegacao a {
+  text-decoration: none;
+  color: var(--cor-texto-claro);
+  font-weight: 500;
+}
+
+.links-navegacao a:hover {
+  color: var(--cor-primaria);
+}
+
+.link-ativo {
+  color: var(--cor-primaria) !important;
+}
+
+.usuario-logado {
+  font-size: var(--tamanho-texto-pequeno);
+  color: var(--cor-texto-claro);
+}
+
+.conteudo {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--espaco-grande);
+}
+
+.cabecalho-lista {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--espaco-medio);
+}
+
+.cabecalho-lista h1 {
+  font-size: var(--tamanho-titulo-grande);
+  color: var(--cor-texto);
+}
+
+.botao-nova-demanda {
+  background-color: var(--cor-primaria);
+  color: #FFFFFF;
+  text-decoration: none;
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  border-radius: 6px;
+  font-size: var(--tamanho-texto-pequeno);
+  font-weight: 600;
+}
+
+.botao-nova-demanda:hover {
+  background-color: var(--cor-primaria-escura);
+}
+
+.barra-filtros {
+  display: flex;
+  gap: var(--espaco-pequeno);
+  margin-bottom: var(--espaco-medio);
+}
+
+.barra-filtros input,
+.barra-filtros select {
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  padding: var(--espaco-pequeno);
+  font-family: var(--fonte-padrao);
+  font-size: var(--tamanho-texto-pequeno);
+}
+
+.barra-filtros input {
+  flex: 1;
+}
+
+.tabela-demandas {
+  width: 100%;
+  border-collapse: collapse; 
+  background-color: var(--cor-fundo-card);
+  border: 1px solid var(--cor-borda);
+}
+
+.tabela-demandas th {
+  text-align: left;
+  font-size: var(--tamanho-texto-pequeno);
+  color: var(--cor-texto-claro);
+  background-color: var(--cor-fundo);
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.tabela-demandas td {
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  border-bottom: 1px solid var(--cor-borda);
+  font-size: var(--tamanho-texto-pequeno);
+}
+
+.tabela-demandas a {
+  color: var(--cor-primaria);
+  text-decoration: none;
+}
+
+.etiqueta {
+  display: inline-block;
+  padding: 2px var(--espaco-pequeno);
+  border-radius: 12px;
+  font-size: var(--tamanho-texto-pequeno);
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.etiqueta-critica  { background-color: var(--cor-prioridade-critica); }
+.etiqueta-alta     { background-color: var(--cor-prioridade-alta); }
+.etiqueta-media    { background-color: var(--cor-prioridade-media); }
+.etiqueta-baixa    { background-color: var(--cor-prioridade-baixa); }
+
+.etiqueta-aberta     { background-color: var(--cor-status-aberta); }
+.etiqueta-andamento  { background-color: var(--cor-status-andamento); }
+.etiqueta-revisao    { background-color: var(--cor-status-revisao); }
+.etiqueta-concluida  { background-color: var(--cor-status-concluida); }
+.etiqueta-cancelada  { background-color: var(--cor-status-cancelada); text-decoration: line-through; }  
