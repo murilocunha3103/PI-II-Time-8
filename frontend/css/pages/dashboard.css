@@ -1,1 +1,83 @@
 /* CSS da tela: dashboard */
+.barra-navegacao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--cor-fundo-card);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: var(--espaco-medio) var(--espaco-grande);
+}
+
+.nome-sistema {
+  font-size: var(--tamanho-titulo-pequeno);
+  font-weight: 700;
+  color: var(--cor-texto);
+}
+
+.links-navegacao {
+  display: flex;
+  gap: var(--espaco-grande);
+}
+
+.links-navegacao a {
+  text-decoration: none;
+  color: var(--cor-texto-claro);
+  font-weight: 500;
+}
+
+.links-navegacao a:hover {
+  color: var(--cor-primaria);
+}
+
+.link-ativo {
+  color: var(--cor-primaria) !important;
+}
+
+.usuario-logado {
+  font-size: var(--tamanho-texto-pequeno);
+  color: var(--cor-texto-claro);
+}
+
+.conteudo {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--espaco-grande);
+}
+
+.conteudo h1 {
+  font-size: var(--tamanho-titulo-grande);
+  color: var(--cor-texto);
+}
+
+.descricao-pagina {
+  font-size: var(--tamanho-texto-pequeno);
+  color: var(--cor-texto-claro);
+  margin-top: 4px;
+  margin-bottom: var(--espaco-grande);
+}
+
+.grade-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-medio);
+}
+
+.card-indicador {
+  background-color: var(--cor-fundo-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  padding: var(--espaco-medio);
+  width: 220px; 
+}
+
+.card-titulo {
+  font-size: var(--tamanho-texto-pequeno);
+  color: var(--cor-texto-claro);
+  margin-bottom: 4px;
+}
+
+.card-valor {
+  font-size: var(--tamanho-titulo-grande);
+  font-weight: 700;
+  color: var(--cor-texto);
+}
