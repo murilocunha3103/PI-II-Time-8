@@ -1,1 +1,76 @@
 /* CSS da tela: login */
+
+.pagina-login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--espaco-grande);
+}
+
+
+.caixa-login {
+  background-color: var(--cor-fundo-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  padding: var(--espaco-extra-grande);
+  width: 100%;
+  max-width: 380px;
+}
+
+.caixa-login h1 {
+  font-size: var(--tamanho-titulo-grande);
+  color: var(--cor-texto);
+  margin-bottom: var(--espaco-pequeno);
+}
+
+.subtitulo {
+  font-size: var(--tamanho-texto-pequeno);
+  color: var(--cor-texto-claro);
+  margin-bottom: var(--espaco-grande);
+}
+
+.formulario-login {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-medio);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.campo label {
+  font-size: var(--tamanho-texto-pequeno);
+  font-weight: 600;
+  color: var(--cor-texto-claro);
+}
+
+.campo input {
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  padding: var(--espaco-pequeno);
+  font-family: var(--fonte-padrao);
+  font-size: var(--tamanho-texto);
+  color: var(--cor-texto);
+}
+
+.botao-entrar {
+  background-color: var(--cor-primaria);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: var(--espaco-pequeno);
+  font-family: var(--fonte-padrao);
+  font-size: var(--tamanho-texto);
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: var(--espaco-pequeno);
+}
+
+.botao-entrar:hover {
+  background-color: var(--cor-primaria-escura);
+}
