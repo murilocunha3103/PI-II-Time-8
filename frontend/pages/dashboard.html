@@ -3,12 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Acompanhamento de Demandas</title>
+  <title>Dashboard - Sistema de Acompanhamento de Demandas</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/pages/dashboard.css">
 </head>
 <body>
 
+  <header class="barra-navegacao">
+    <span class="nome-sistema">Demandas PI-II</span>
+    <nav class="links-navegacao">
+      <a href="dashboard.html" class="link-ativo">Dashboard</a>
+      <a href="demandas-lista.html">Demandas</a>
+    </nav>
+    <span class="usuario-logado">Nome do Usuário</span>
+  </header>
+
+  <main class="conteudo">
+
+    <h1>Dashboard</h1>
+    <p class="descricao-pagina">Resumo geral das demandas cadastradas no sistema</p>
+
+    <section class="grade-cards">
+
+      <div class="card-indicador">
+        <p class="card-titulo">Total de demandas</p>
+        <p class="card-valor">0</p>
+      </div>
+
+      <div class="card-indicador">
+        <p class="card-titulo">Abertas</p>
+        <p class="card-valor">0</p>
+      </div>
+
+      <div class="card-indicador">
+        <p class="card-titulo">Em andamento</p>
+        <p class="card-valor">0</p>
+      </div>
+
+      <div class="card-indicador">
+        <p class="card-titulo">Em revisão</p>
+        <p class="card-valor">0</p>
+      </div>
+
+      <div class="card-indicador">
+        <p class="card-titulo">Concluídas</p>
+        <p class="card-valor">0</p>
+      </div>
+
+      <div class="card-indicador">
+        <p class="card-titulo">Canceladas</p>
+        <p class="card-valor">0</p>
+      </div>
+
+      <div class="card-indicador">
+        <p class="card-titulo">Críticas em aberto</p>
+        <p class="card-valor">0</p>
+      </div>
+
+      <div class="card-indicador">
+        <p class="card-titulo">Próximas do prazo</p>
+        <p class="card-valor">0</p>
+      </div>
+
+    </section>
+
+  </main>
 
 </body>
 </html>
