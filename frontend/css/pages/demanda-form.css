@@ -1,1 +1,125 @@
 /* CSS da tela: demanda-form */
+.barra-navegacao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--cor-fundo-card);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: var(--espaco-medio) var(--espaco-grande);
+}
+
+.nome-sistema {
+  font-size: var(--tamanho-titulo-pequeno);
+  font-weight: 700;
+  color: var(--cor-texto);
+}
+
+.links-navegacao {
+  display: flex;
+  gap: var(--espaco-grande);
+}
+
+.links-navegacao a {
+  text-decoration: none;
+  color: var(--cor-texto-claro);
+  font-weight: 500;
+}
+
+.links-navegacao a:hover {
+  color: var(--cor-primaria);
+}
+
+.link-ativo {
+  color: var(--cor-primaria) !important;
+}
+
+.usuario-logado {
+  font-size: var(--tamanho-texto-pequeno);
+  color: var(--cor-texto-claro);
+}
+
+.conteudo {
+  max-width: 600px; 
+  margin: 0 auto;
+  padding: var(--espaco-grande);
+}
+
+.conteudo h1 {
+  font-size: var(--tamanho-titulo-grande);
+  color: var(--cor-texto);
+  margin-bottom: var(--espaco-medio);
+}
+
+.caixa-formulario {
+  background-color: var(--cor-fundo-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  padding: var(--espaco-grande);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-medio);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.campo label {
+  font-size: var(--tamanho-texto-pequeno);
+  font-weight: 600;
+  color: var(--cor-texto-claro);
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  padding: var(--espaco-pequeno);
+  font-family: var(--fonte-padrao);
+  font-size: var(--tamanho-texto);
+  color: var(--cor-texto);
+}
+
+.campo textarea {
+  resize: vertical;
+}
+
+.linha-botoes {
+  display: flex;
+  gap: var(--espaco-pequeno);
+  margin-top: var(--espaco-pequeno);
+}
+
+.botao-salvar {
+  background-color: var(--cor-primaria);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  font-family: var(--fonte-padrao);
+  font-size: var(--tamanho-texto);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botao-salvar:hover {
+  background-color: var(--cor-primaria-escura);
+}
+
+.botao-cancelar {
+  background-color: transparent;
+  color: var(--cor-texto);
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  font-size: var(--tamanho-texto);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.botao-cancelar:hover {
+  background-color: var(--cor-fundo);
+}
