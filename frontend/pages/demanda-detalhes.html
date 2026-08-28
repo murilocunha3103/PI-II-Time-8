@@ -3,11 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Acompanhamento de Demandas</title>
+  <title>Detalhes da Demanda - Sistema de Acompanhamento de Demandas</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/pages/demanda-detalhes.css">
 </head>
 <body>
+
+  <header class="barra-navegacao">
+    <span class="nome-sistema">Demandas PI-II</span>
+    <nav class="links-navegacao">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="demandas-lista.html" class="link-ativo">Demandas</a>
+    </nav>
+    <span class="usuario-logado">Nome do Usuário</span>
+  </header>
+
+  <main class="conteudo">
+
+    <a href="demandas-lista.html" class="link-voltar">&larr; Voltar para a listagem</a>
+
+    <section class="card-demanda">
+
+      <div class="cabecalho-demanda">
+        <h1>Corrigir erro no login</h1>
+        <div class="etiquetas-demanda">
+          <span class="etiqueta etiqueta-critica">Crítica</span>
+          <span class="etiqueta etiqueta-aberta">Aberta</span>
+        </div>
+      </div>
+
+      <p class="info-demanda">Projeto: Sistema de Acompanhamento de Demandas</p>
+      <p class="info-demanda">Responsável: Não atribuído</p>
+      <p class="info-demanda">Criada em: --/--/---- &nbsp;|&nbsp; Última atualização: --/--/---- &nbsp;|&nbsp; Prazo: --/--/----</p>
+
+      <h2 class="subtitulo-secao">Descrição</h2>
+      <p>Descrição detalhada da demanda vai aqui.</p>
+
+      <div class="linha-botoes">
+        <button class="botao-atualizar">Atualizar status</button>
+        <button class="botao-editar">Editar</button>
+        <button class="botao-cancelar-demanda">Cancelar demanda</button>
+      </div>
+
+    </section>
+
+    <section class="card-demanda">
+      <h2 class="subtitulo-secao">Histórico de alterações</h2>
+      <ul class="lista-historico">
+        <li>João alterou o status da demanda de Aberta para Em andamento.</li>
+      </ul>
+    </section>
+
+    <section class="card-demanda">
+      <h2 class="subtitulo-secao">Comentários</h2>
+      <ul class="lista-comentarios">
+        <li>Exemplo de comentário registrado por um usuário.</li>
+      </ul>
+
+      <form class="formulario-comentario">
+        <label for="comentario">Adicionar comentário</label>
+        <textarea id="comentario" rows="3" placeholder="Escreva seu comentário"></textarea>
+        <button type="submit" class="botao-comentar">Comentar</button>
+      </form>
+    </section>
+
+  </main>
 
 </body>
 </html>
