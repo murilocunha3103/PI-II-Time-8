@@ -1,4 +1,10 @@
 /* CSS da tela: demanda-form */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .barra-navegacao {
   display: flex;
   align-items: center;
@@ -81,6 +87,7 @@
   font-family: var(--fonte-padrao);
   font-size: var(--tamanho-texto);
   color: var(--cor-texto);
+  outline: none;
 }
 
 .campo textarea {
@@ -94,6 +101,9 @@
 }
 
 .botao-salvar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: var(--cor-primaria);
   color: #FFFFFF;
   border: none;
@@ -103,13 +113,19 @@
   font-size: var(--tamanho-texto);
   font-weight: 600;
   cursor: pointer;
+  height: 45px;
+  transition: .3s ease-in-out;
 }
 
 .botao-salvar:hover {
   background-color: var(--cor-primaria-escura);
+  transition: .3s ease-in-out;
 }
 
 .botao-cancelar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: transparent;
   color: var(--cor-texto);
   border: 1px solid var(--cor-borda);
@@ -118,8 +134,10 @@
   font-size: var(--tamanho-texto);
   font-weight: 600;
   text-decoration: none;
+  transition: .3s ease-in-out;
 }
 
 .botao-cancelar:hover {
   background-color: var(--cor-fundo);
+  transition: .3s ease-in-out;
 }
