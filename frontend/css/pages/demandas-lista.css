@@ -1,17 +1,22 @@
+/* Autor: Murilo Xavier */
 /* CSS da tela: demandas-lista */
+
 .barra-navegacao {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: var(--cor-fundo-card);
-  border-bottom: 1px solid var(--cor-borda);
+  border-bottom: 2px solid var(--cor-borda-forte);
   padding: var(--espaco-medio) var(--espaco-grande);
 }
 
 .nome-sistema {
+  font-family: var(--fonte-destaque);
   font-size: var(--tamanho-titulo-pequeno);
   font-weight: 700;
   color: var(--cor-texto);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .links-navegacao {
@@ -52,6 +57,7 @@
 }
 
 .cabecalho-lista h1 {
+  font-family: var(--fonte-destaque);
   font-size: var(--tamanho-titulo-grande);
   color: var(--cor-texto);
 }
@@ -61,7 +67,7 @@
   color: #FFFFFF;
   text-decoration: none;
   padding: var(--espaco-pequeno) var(--espaco-medio);
-  border-radius: 6px;
+  border-radius: var(--raio-interativo);
   font-size: var(--tamanho-texto-pequeno);
   font-weight: 600;
 }
@@ -79,7 +85,7 @@
 .barra-filtros input,
 .barra-filtros select {
   border: 1px solid var(--cor-borda);
-  border-radius: 6px;
+  border-radius: var(--raio-interativo);
   padding: var(--espaco-pequeno);
   font-family: var(--fonte-padrao);
   font-size: var(--tamanho-texto-pequeno);
@@ -91,9 +97,9 @@
 
 .tabela-demandas {
   width: 100%;
-  border-collapse: collapse; 
+  border-collapse: collapse;
   background-color: var(--cor-fundo-card);
-  border: 1px solid var(--cor-borda);
+  border: 2px solid var(--cor-borda-forte);
 }
 
 .tabela-demandas th {
@@ -119,9 +125,10 @@
 .etiqueta {
   display: inline-block;
   padding: 2px var(--espaco-pequeno);
-  border-radius: 12px;
+  border-radius: var(--raio-interativo);
+  font-family: var(--fonte-destaque);
   font-size: var(--tamanho-texto-pequeno);
-  font-weight: 600;
+  font-weight: 700;
   color: #FFFFFF;
 }
 
@@ -134,4 +141,4 @@
 .etiqueta-andamento  { background-color: var(--cor-status-andamento); }
 .etiqueta-revisao    { background-color: var(--cor-status-revisao); }
 .etiqueta-concluida  { background-color: var(--cor-status-concluida); }
-.etiqueta-cancelada  { background-color: var(--cor-status-cancelada); text-decoration: line-through; }  
+.etiqueta-cancelada  { background-color: var(--cor-status-cancelada); text-decoration: line-through; }

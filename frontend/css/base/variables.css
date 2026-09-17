@@ -1,31 +1,34 @@
-/* Cores, fontes e espaçamentos padrão do projeto padronizados através de variáveis */
-/* As regras de quando usar cada uma estão em docs/design.md (arquivo com as regras de design do projeto)*/
+/* Autor: Arthur de Senna, Gabriel Passarela, João Victor Nunes, Kevin Eziquiel e Murilo Xavier  */
+/* Cores, fontes, tamanhos e espaçamentos padrão do projeto, definidos através de variáveis */
+/* As regras de quando usar cada uma estão em docs/design.md (arquivo com as regras de design do projeto) */
 
 :root {
   /* Cores principais do sistema */
-  --cor-primaria: #2F5FF6;
-  --cor-primaria-escura: #1F3FCB;
-  --cor-fundo: #F5F7FB;
-  --cor-fundo-card: #FFFFFF;
-  --cor-texto: #1A1D29;
-  --cor-texto-claro: #6B7280;
-  --cor-borda: #E2E5EC;
+  --cor-primaria: #B5502E;
+  --cor-primaria-escura: #8C3D22;
+  --cor-fundo: #F2EBE1;
+  --cor-fundo-card: #FBF7F0;
+  --cor-texto: #2B2118;
+  --cor-texto-claro: #7A6F5D;
+  --cor-borda: #DCD0BC;
+  --cor-borda-forte: #2B2118;
 
   /* Cores de prioridade da demanda */
-  --cor-prioridade-critica: #DC2626;
-  --cor-prioridade-alta: #F97316;
-  --cor-prioridade-media: #EAB308;
-  --cor-prioridade-baixa: #22C55E;
+  --cor-prioridade-critica: #8C2F1E;
+  --cor-prioridade-alta: #C1622B;
+  --cor-prioridade-media: #A6791E;
+  --cor-prioridade-baixa: #5F7A3D;
 
   /* Cores de status da demanda */
-  --cor-status-aberta: #6B7280;
-  --cor-status-andamento: #2F5FF6;
-  --cor-status-revisao: #EAB308;
-  --cor-status-concluida: #22C55E;
-  --cor-status-cancelada: #DC2626;
+  --cor-status-aberta: #6B6357;
+  --cor-status-andamento: #2F5D62;
+  --cor-status-revisao: #6B4C6B;
+  --cor-status-concluida: #355E3B;
+  --cor-status-cancelada: #6E1F2B;
 
-  /* Fonte */
-  --fonte-padrao: 'Inter', Arial, sans-serif;
+  /* Fontes */
+  --fonte-padrao: 'Work Sans', Arial, sans-serif;
+  --fonte-destaque: 'Space Mono', monospace;
 
   /* Tamanhos de texto */
   --tamanho-titulo-grande: 28px;
@@ -39,4 +42,8 @@
   --espaco-medio: 16px;
   --espaco-grande: 24px;
   --espaco-extra-grande: 32px;
+
+  /* Cantos arredondados */
+  --raio-interativo: 3px;
+  --raio-container: 0px;
 }

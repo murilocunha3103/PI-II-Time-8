@@ -1,3 +1,5 @@
+<!-- Autor: Arthur de Senna, Gabriel Passarela, João Victor Nunes, Kevin Eziquiel e Murilo Xavier -->
+
 # Como está organizado o projeto
 
 Este documento explica como as pastas do projeto estão organizadas e como cada pessoa

@@ -1,18 +1,22 @@
-/* CSS da tela: demanda-detalhes */
+/* Autor: João Victor Nunes */
+/* CSS da tela de Detalhes da Demanda */
 
 .barra-navegacao {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: var(--cor-fundo-card);
-  border-bottom: 1px solid var(--cor-borda);
+  border-bottom: 2px solid var(--cor-borda-forte);
   padding: var(--espaco-medio) var(--espaco-grande);
 }
 
 .nome-sistema {
+  font-family: var(--fonte-destaque);
   font-size: var(--tamanho-titulo-pequeno);
   font-weight: 700;
   color: var(--cor-texto);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .links-navegacao {
@@ -39,7 +43,6 @@
   color: var(--cor-texto-claro);
 }
 
-/* --- Conteúdo da página --- */
 .conteudo {
   max-width: 800px;
   margin: 0 auto;
@@ -60,8 +63,8 @@
 
 .card-demanda {
   background-color: var(--cor-fundo-card);
-  border: 1px solid var(--cor-borda);
-  border-radius: 8px;
+  border: 2px solid var(--cor-borda-forte);
+  border-radius: var(--raio-container);
   padding: var(--espaco-grande);
   margin-bottom: var(--espaco-medio);
 }
@@ -74,6 +77,7 @@
 }
 
 .cabecalho-demanda h1 {
+  font-family: var(--fonte-destaque);
   font-size: var(--tamanho-titulo-medio);
   color: var(--cor-texto);
 }
@@ -90,6 +94,7 @@
 }
 
 .subtitulo-secao {
+  font-family: var(--fonte-destaque);
   font-size: var(--tamanho-titulo-pequeno);
   color: var(--cor-texto);
   margin-top: var(--espaco-medio);
@@ -99,9 +104,10 @@
 .etiqueta {
   display: inline-block;
   padding: 2px var(--espaco-pequeno);
-  border-radius: 12px;
+  border-radius: var(--raio-interativo);
+  font-family: var(--fonte-destaque);
   font-size: var(--tamanho-texto-pequeno);
-  font-weight: 600;
+  font-weight: 700;
   color: #FFFFFF;
 }
 
@@ -126,7 +132,7 @@
 .botao-editar,
 .botao-cancelar-demanda {
   border: none;
-  border-radius: 6px;
+  border-radius: var(--raio-interativo);
   padding: var(--espaco-pequeno) var(--espaco-medio);
   font-family: var(--fonte-padrao);
   font-size: var(--tamanho-texto-pequeno);
@@ -193,7 +199,7 @@
 
 .formulario-comentario textarea {
   border: 1px solid var(--cor-borda);
-  border-radius: 6px;
+  border-radius: var(--raio-interativo);
   padding: var(--espaco-pequeno);
   font-family: var(--fonte-padrao);
   font-size: var(--tamanho-texto);
@@ -201,11 +207,11 @@
 }
 
 .botao-comentar {
-  align-self: flex-start; 
+  align-self: flex-start;
   background-color: var(--cor-primaria);
   color: #FFFFFF;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--raio-interativo);
   padding: var(--espaco-pequeno) var(--espaco-medio);
   font-family: var(--fonte-padrao);
   font-size: var(--tamanho-texto-pequeno);

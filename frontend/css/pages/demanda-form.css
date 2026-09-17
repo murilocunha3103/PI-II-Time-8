@@ -1,23 +1,22 @@
+/* Autor: Kevin Eziquiel */
 /* CSS da tela: demanda-form */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
 .barra-navegacao {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: var(--cor-fundo-card);
-  border-bottom: 1px solid var(--cor-borda);
+  border-bottom: 2px solid var(--cor-borda-forte);
   padding: var(--espaco-medio) var(--espaco-grande);
 }
 
 .nome-sistema {
+  font-family: var(--fonte-destaque);
   font-size: var(--tamanho-titulo-pequeno);
   font-weight: 700;
   color: var(--cor-texto);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .links-navegacao {
@@ -45,12 +44,13 @@
 }
 
 .conteudo {
-  max-width: 600px; 
+  max-width: 600px;
   margin: 0 auto;
   padding: var(--espaco-grande);
 }
 
 .conteudo h1 {
+  font-family: var(--fonte-destaque);
   font-size: var(--tamanho-titulo-grande);
   color: var(--cor-texto);
   margin-bottom: var(--espaco-medio);
@@ -58,8 +58,8 @@
 
 .caixa-formulario {
   background-color: var(--cor-fundo-card);
-  border: 1px solid var(--cor-borda);
-  border-radius: 8px;
+  border: 2px solid var(--cor-borda-forte);
+  border-radius: var(--raio-container);
   padding: var(--espaco-grande);
   display: flex;
   flex-direction: column;
@@ -82,7 +82,7 @@
 .campo select,
 .campo textarea {
   border: 1px solid var(--cor-borda);
-  border-radius: 6px;
+  border-radius: var(--raio-interativo);
   padding: var(--espaco-pequeno);
   font-family: var(--fonte-padrao);
   font-size: var(--tamanho-texto);
@@ -107,7 +107,7 @@
   background-color: var(--cor-primaria);
   color: #FFFFFF;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--raio-interativo);
   padding: var(--espaco-pequeno) var(--espaco-medio);
   font-family: var(--fonte-padrao);
   font-size: var(--tamanho-texto);
@@ -119,7 +119,6 @@
 
 .botao-salvar:hover {
   background-color: var(--cor-primaria-escura);
-  transition: .3s ease-in-out;
 }
 
 .botao-cancelar {
@@ -129,7 +128,7 @@
   background-color: transparent;
   color: var(--cor-texto);
   border: 1px solid var(--cor-borda);
-  border-radius: 6px;
+  border-radius: var(--raio-interativo);
   padding: var(--espaco-pequeno) var(--espaco-medio);
   font-size: var(--tamanho-texto);
   font-weight: 600;
@@ -139,5 +138,4 @@
 
 .botao-cancelar:hover {
   background-color: var(--cor-fundo);
-  transition: .3s ease-in-out;
 }

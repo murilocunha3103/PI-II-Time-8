@@ -1,3 +1,5 @@
+<!-- Autor: Arthur de Senna, Gabriel Passarela, João Victor Nunes, Kevin Eziquiel e Murilo Xavier -->
+
 # Convenção de Commits
 
 Este documento explica como escrever as mensagens de commit no nosso projeto. Isso

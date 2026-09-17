@@ -1,6 +1,7 @@
+/* Autor: Arthur de Senna, Gabriel Passarela, João Victor Nunes, Kevin Eziquiel e Murilo Xavier  */
 /* Esse arquivo é chamado em todas as páginas do site. */
-/* Ele só junta as variáveis e o reset básico */
-/* Cada página tem o seu próprio arquivo css, onde o estilo específico daquela tela está. */
+/* Ele só junta as variáveis e o reset básico. */
+/* Cada página tem o seu próprio arquivo CSS, onde o estilo específico daquela tela está. */
 
 @import url('base/variables.css');
 @import url('base/reset.css');

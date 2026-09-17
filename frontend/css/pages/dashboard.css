@@ -1,17 +1,22 @@
-/* CSS da tela: dashboard */
+/* Autor: Arthur de Senna */
+/* CSS da tela de Dashboard */
+
 .barra-navegacao {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: var(--cor-fundo-card);
-  border-bottom: 1px solid var(--cor-borda);
+  border-bottom: 2px solid var(--cor-borda-forte);
   padding: var(--espaco-medio) var(--espaco-grande);
 }
 
 .nome-sistema {
+  font-family: var(--fonte-destaque);
   font-size: var(--tamanho-titulo-pequeno);
   font-weight: 700;
   color: var(--cor-texto);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .links-navegacao {
@@ -45,6 +50,7 @@
 }
 
 .conteudo h1 {
+  font-family: var(--fonte-destaque);
   font-size: var(--tamanho-titulo-grande);
   color: var(--cor-texto);
 }
@@ -64,10 +70,10 @@
 
 .card-indicador {
   background-color: var(--cor-fundo-card);
-  border: 1px solid var(--cor-borda);
-  border-radius: 8px;
+  border: 2px solid var(--cor-borda-forte);
+  border-radius: var(--raio-container);
   padding: var(--espaco-medio);
-  width: 220px; 
+  width: 220px;
 }
 
 .card-titulo {
@@ -77,6 +83,7 @@
 }
 
 .card-valor {
+  font-family: var(--fonte-destaque);
   font-size: var(--tamanho-titulo-grande);
   font-weight: 700;
   color: var(--cor-texto);
