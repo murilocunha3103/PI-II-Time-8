@@ -1,5 +1,4 @@
-<!-- Autor: Arthur de Senna -->
-
+<!-- Autor: Arthur de Senna Nardi Cortina -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,7 +7,7 @@
   <title>Dashboard - Sistema de Acompanhamento de Demandas</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/pages/dashboard.css">
@@ -27,53 +26,84 @@
   <main class="conteudo">
 
     <h1>Dashboard</h1>
-    <p class="descricao-pagina">Resumo geral das demandas cadastradas no sistema</p>
+    <p class="descricao-pagina" id="contagem-filtro">Resumo geral das demandas cadastradas no sistema</p>
+
+    <!--
+      Barra de filtros do dashboard. Os ids abaixo são usados pelo dashboard.js
+      pra saber o que foi digitado/escolhido e recalcular os cards.
+
+      Atenção: como esta tela ainda não está ligada ao backend, o dashboard.js
+      cria, só pra esta demonstração, uma lista temporária de demandas dentro do
+      próprio arquivo JavaScript. Quando o backend estiver pronto, essa lista vai
+      ser substituída pelos dados reais vindos do banco de dados.
+    -->
+    <div class="barra-filtros">
+      <input type="text" id="busca-dashboard" placeholder="Buscar por título ou responsável">
+
+      <select id="filtro-responsavel">
+        <option value="">Todos os responsáveis</option>
+        <option value="Arthur de Senna">Arthur de Senna</option>
+        <option value="Gabriel Passarela">Gabriel Passarela</option>
+        <option value="Joao Victor">Joao Victor</option>
+        <option value="Kevin Lima">Kevin Lima</option>
+        <option value="Murilo Cunha">Murilo Cunha</option>
+      </select>
+
+      <select id="filtro-prioridade-dashboard">
+        <option value="">Todas as prioridades</option>
+        <option value="critica">Crítica</option>
+        <option value="alta">Alta</option>
+        <option value="media">Média</option>
+        <option value="baixa">Baixa</option>
+      </select>
+    </div>
 
     <section class="grade-cards">
 
       <div class="card-indicador">
         <p class="card-titulo">Total de demandas</p>
-        <p class="card-valor">0</p>
+        <p class="card-valor" id="valor-total">0</p>
       </div>
 
       <div class="card-indicador">
         <p class="card-titulo">Abertas</p>
-        <p class="card-valor">0</p>
+        <p class="card-valor" id="valor-abertas">0</p>
       </div>
 
       <div class="card-indicador">
         <p class="card-titulo">Em andamento</p>
-        <p class="card-valor">0</p>
+        <p class="card-valor" id="valor-andamento">0</p>
       </div>
 
       <div class="card-indicador">
         <p class="card-titulo">Em revisão</p>
-        <p class="card-valor">0</p>
+        <p class="card-valor" id="valor-revisao">0</p>
       </div>
 
       <div class="card-indicador">
         <p class="card-titulo">Concluídas</p>
-        <p class="card-valor">0</p>
+        <p class="card-valor" id="valor-concluidas">0</p>
       </div>
 
       <div class="card-indicador">
         <p class="card-titulo">Canceladas</p>
-        <p class="card-valor">0</p>
+        <p class="card-valor" id="valor-canceladas">0</p>
       </div>
 
       <div class="card-indicador">
         <p class="card-titulo">Críticas em aberto</p>
-        <p class="card-valor">0</p>
+        <p class="card-valor" id="valor-criticas">0</p>
       </div>
 
       <div class="card-indicador">
         <p class="card-titulo">Próximas do prazo</p>
-        <p class="card-valor">0</p>
+        <p class="card-valor" id="valor-prazo">0</p>
       </div>
 
     </section>
 
   </main>
 
+  <script src="../js/dashboard.js"></script>
 </body>
 </html>

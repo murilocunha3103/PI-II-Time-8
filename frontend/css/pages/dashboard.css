@@ -1,5 +1,5 @@
-/* Autor: Arthur de Senna */
-/* CSS da tela de Dashboard */
+/* Autor: Arthur de Senna Nardi Cortina */
+/* CSS da tela: dashboard */
 
 .barra-navegacao {
   display: flex;
@@ -60,6 +60,25 @@
   color: var(--cor-texto-claro);
   margin-top: 4px;
   margin-bottom: var(--espaco-grande);
+}
+
+.barra-filtros {
+  display: flex;
+  gap: var(--espaco-pequeno);
+  margin-bottom: var(--espaco-medio);
+}
+
+.barra-filtros input,
+.barra-filtros select {
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-interativo);
+  padding: var(--espaco-pequeno);
+  font-family: var(--fonte-padrao);
+  font-size: var(--tamanho-texto-pequeno);
+}
+
+.barra-filtros input {
+  flex: 1;
 }
 
 .grade-cards {
