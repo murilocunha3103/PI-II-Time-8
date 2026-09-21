@@ -1,5 +1,4 @@
-<!-- Autor: Murilo Xavier-->
-
+<!-- Autor: Murilo Xavier Sarra da Cunha -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,7 +7,7 @@
   <title>Demandas - Sistema de Acompanhamento de Demandas</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/pages/demandas-lista.css">
@@ -31,10 +30,17 @@
       <a href="demanda-form.html" class="botao-nova-demanda">Nova demanda</a>
     </div>
 
+    <!--
+      Esta tela não tem um formulário com botão de "enviar" - o comportamento em
+      JavaScript aqui (demandas-lista.js) é filtrar a tabela em tempo real conforme
+      a pessoa digita na busca ou escolhe um status/prioridade, sem precisar de
+      recarregar a página. Os ids abaixo (busca-demanda, filtro-status,
+      filtro-prioridade) são o que o JavaScript usa para "ouvir" essas mudanças.
+    -->
     <div class="barra-filtros">
-      <input type="text" placeholder="Buscar por título ou descrição">
+      <input type="text" id="busca-demanda" placeholder="Buscar por título">
 
-      <select>
+      <select id="filtro-status">
         <option value="">Status</option>
         <option value="aberta">Aberta</option>
         <option value="andamento">Em andamento</option>
@@ -43,7 +49,7 @@
         <option value="cancelada">Cancelada</option>
       </select>
 
-      <select>
+      <select id="filtro-prioridade">
         <option value="">Prioridade</option>
         <option value="critica">Crítica</option>
         <option value="alta">Alta</option>
@@ -52,7 +58,7 @@
       </select>
     </div>
 
-    <table class="tabela-demandas">
+    <table class="tabela-demandas" id="tabela-demandas">
       <thead>
         <tr>
           <th>Título</th>
@@ -63,8 +69,13 @@
           <th>Prazo</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
+      <!--
+        Cada <tr> tem data-status e data-prioridade com o MESMO valor usado nos
+        <option> dos selects acima. É assim que o JavaScript compara "o que foi
+        escolhido no filtro" com "o que essa linha representa".
+      -->
+      <tbody id="corpo-tabela">
+        <tr data-status="aberta" data-prioridade="critica">
           <td><a href="demanda-detalhes.html">Corrigir erro no login</a></td>
           <td>Defeito</td>
           <td><span class="etiqueta etiqueta-critica">Crítica</span></td>
@@ -72,7 +83,7 @@
           <td>Não atribuído</td>
           <td>--/--/----</td>
         </tr>
-        <tr>
+        <tr data-status="andamento" data-prioridade="media">
           <td><a href="demanda-detalhes.html">Criar tela de dashboard</a></td>
           <td>Tarefa</td>
           <td><span class="etiqueta etiqueta-media">Média</span></td>
@@ -80,7 +91,7 @@
           <td>Aluno Exemplo</td>
           <td>--/--/----</td>
         </tr>
-        <tr>
+        <tr data-status="concluida" data-prioridade="baixa">
           <td><a href="demanda-detalhes.html">Escrever README do projeto</a></td>
           <td>Documentação</td>
           <td><span class="etiqueta etiqueta-baixa">Baixa</span></td>
@@ -93,5 +104,6 @@
 
   </main>
 
+  <script src="../js/demandas-lista.js"></script>
 </body>
 </html>
