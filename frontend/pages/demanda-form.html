@@ -1,5 +1,4 @@
-<!-- Autor: Kevin Eziquiel -->
-
+<!-- Autor: Kevin Eziquiel Lima -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,7 +7,7 @@
   <title>Nova Demanda - Sistema de Acompanhamento de Demandas</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/pages/demanda-form.css">
@@ -28,16 +27,23 @@
 
     <h1>Nova demanda</h1>
 
-    <form class="caixa-formulario">
+    <!--
+      novalidate: desliga a validação automática do navegador, porque quem vai
+      validar e mostrar as mensagens de erro é o nosso próprio JavaScript
+      (demanda-form.js), como pede a Reunião 3.
+    -->
+    <form class="caixa-formulario" id="formulario-demanda" novalidate>
 
       <div class="campo">
         <label for="titulo">Título</label>
         <input type="text" id="titulo" name="titulo" placeholder="Ex: Corrigir erro no login">
+        <span class="mensagem-erro" id="erroTitulo"></span>
       </div>
 
       <div class="campo">
         <label for="descricao">Descrição</label>
         <textarea id="descricao" name="descricao" rows="4" placeholder="Descreva a demanda"></textarea>
+        <span class="mensagem-erro" id="erroDescricao"></span>
       </div>
 
       <div class="campo">
@@ -70,6 +76,7 @@
       <div class="campo">
         <label for="prazo">Prazo de finalização</label>
         <input type="date" id="prazo" name="prazo">
+        <span class="mensagem-erro" id="erroPrazo"></span>
       </div>
 
       <div class="linha-botoes">
@@ -77,9 +84,15 @@
         <a href="demandas-lista.html" class="botao-cancelar">Cancelar</a>
       </div>
 
+      <p class="mensagem-sucesso" id="mensagem-sucesso">
+        Demanda validada com sucesso! (o envio real para o backend será implementado
+        em uma etapa futura, quando o servidor tiver as rotas de demandas prontas)
+      </p>
+
     </form>
 
   </main>
 
+  <script src="../js/demanda-form.js"></script>
 </body>
 </html>
