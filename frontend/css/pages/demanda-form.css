@@ -1,4 +1,4 @@
-/* Autor: Kevin Eziquiel */
+/* Autor: Kevin Eziquiel Lima */
 /* CSS da tela: demanda-form */
 
 .barra-navegacao {
@@ -92,6 +92,33 @@
 
 .campo textarea {
   resize: vertical;
+}
+
+/* --- Estados de validação (novo nesta etapa) --- */
+/* Aplicada pelo JavaScript no campo que falhou na validação */
+.campo input.campo-invalido,
+.campo select.campo-invalido,
+.campo textarea.campo-invalido {
+  border-color: var(--cor-erro);
+}
+
+/* Texto de erro que aparece embaixo do campo, também controlado pelo JavaScript.
+   Fica com altura mínima reservada mesmo vazio, pra não "pular" o layout quando
+   o erro aparece ou some. */
+.mensagem-erro {
+  font-size: 12px;
+  color: var(--cor-erro);
+  min-height: 14px;
+}
+
+/* Mensagem de sucesso, mostrada quando o formulário passa em todas as validações */
+.mensagem-sucesso {
+  font-size: var(--tamanho-texto-pequeno);
+  color: var(--cor-prioridade-baixa);
+  border: 1px solid var(--cor-prioridade-baixa);
+  border-radius: var(--raio-interativo);
+  padding: var(--espaco-pequeno);
+  display: none; /* o JavaScript troca pra "block" quando o envio é válido */
 }
 
 .linha-botoes {
