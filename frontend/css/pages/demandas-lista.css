@@ -1,4 +1,4 @@
-/* Autor: Murilo Xavier */
+/* Autor: Murilo Xavier Sarra da Cunha */
 /* CSS da tela: demandas-lista */
 
 .barra-navegacao {
@@ -142,3 +142,12 @@
 .etiqueta-revisao    { background-color: var(--cor-status-revisao); }
 .etiqueta-concluida  { background-color: var(--cor-status-concluida); }
 .etiqueta-cancelada  { background-color: var(--cor-status-cancelada); text-decoration: line-through; }
+
+/* Linha exibida pelo JavaScript (demandas-lista.js) quando nenhuma demanda
+   corresponde aos filtros/busca aplicados */
+.linha-sem-resultado td {
+  text-align: center;
+  color: var(--cor-texto-claro);
+  font-style: italic;
+  padding: var(--espaco-grande);
+}
