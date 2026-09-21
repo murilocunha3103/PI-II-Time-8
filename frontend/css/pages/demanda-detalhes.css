@@ -1,5 +1,5 @@
-/* Autor: João Victor Nunes */
-/* CSS da tela de Detalhes da Demanda */
+/* Autor: Joao Victor Nunes Soares */
+/* CSS da tela: demanda-detalhes */
 
 .barra-navegacao {
   display: flex;
@@ -204,6 +204,16 @@
   font-family: var(--fonte-padrao);
   font-size: var(--tamanho-texto);
   resize: vertical;
+}
+
+.formulario-comentario textarea.campo-invalido {
+  border-color: var(--cor-erro);
+}
+
+.formulario-comentario .mensagem-erro {
+  font-size: 12px;
+  color: var(--cor-erro);
+  min-height: 14px;
 }
 
 .botao-comentar {
