@@ -1,5 +1,5 @@
-<!-- Autor: João Victor Nunes -->
-
+<!-- Autor: Joao Victor Nunes Soares -->
+ 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,7 +8,7 @@
   <title>Detalhes da Demanda - Sistema de Acompanhamento de Demandas</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/pages/demanda-detalhes.css">
@@ -48,7 +48,11 @@
       <div class="linha-botoes">
         <button class="botao-atualizar">Atualizar status</button>
         <button class="botao-editar">Editar</button>
-        <button class="botao-cancelar-demanda">Cancelar demanda</button>
+        <!--
+          id usado pelo JavaScript pra pedir uma confirmação antes de cancelar
+          (evita cancelamento acidental por clique errado)
+        -->
+        <button class="botao-cancelar-demanda" id="botao-cancelar-demanda">Cancelar demanda</button>
       </div>
 
     </section>
@@ -62,18 +66,26 @@
 
     <section class="card-demanda">
       <h2 class="subtitulo-secao">Comentários</h2>
-      <ul class="lista-comentarios">
+
+      <!-- id usado pelo JavaScript pra inserir os novos comentários aqui -->
+      <ul class="lista-comentarios" id="lista-comentarios">
         <li>Exemplo de comentário registrado por um usuário.</li>
       </ul>
 
-      <form class="formulario-comentario">
+      <!--
+        novalidate: desliga a validação automática do navegador, porque quem vai
+        validar e mostrar o erro é o nosso próprio JavaScript (demanda-detalhes.js).
+      -->
+      <form class="formulario-comentario" id="formulario-comentario" novalidate>
         <label for="comentario">Adicionar comentário</label>
         <textarea id="comentario" rows="3" placeholder="Escreva seu comentário"></textarea>
+        <span class="mensagem-erro" id="erroComentario"></span>
         <button type="submit" class="botao-comentar">Comentar</button>
       </form>
     </section>
 
   </main>
 
+  <script src="../js/demanda-detalhes.js"></script>
 </body>
 </html>
