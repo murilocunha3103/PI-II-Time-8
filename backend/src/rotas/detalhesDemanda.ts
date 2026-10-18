@@ -1,4 +1,4 @@
-// Autor: Arthur de Senna Nardi Cortina (arquivo-base da estrutura da equipe)
+// Autor: Arthur de Senna Nardi Cortina, João Victor Nunes, Gabriel Passarela, Kevin Eziquiel e Murilo Xavier (arquivo-base da estrutura da equipe)
 //
 // ARQUIVO-BASE (esqueleto): as rotas da tela de Detalhes da Demanda serão implementadas por
 // Joao Victor Nunes Soares, que vai SUBSTITUIR todo o conteúdo deste arquivo na branch dele:
