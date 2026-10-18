@@ -1,0 +1,71 @@
+# Autor: Joao Victor Nunes Soares
+#
+# Requisições de teste das rotas de Detalhes da Demanda (Reunião 4):
+#   GET /demandas/:id, GET /demandas/:id/comentarios e POST /demandas/:id/comentarios
+# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como
+# roteiro para o Thunder Client: copie o método, a URL e o corpo (JSON) de cada requisição.
+# Antes de testar, o servidor precisa estar rodando (npm run dev na pasta backend).
+
+@baseUrl = http://localhost:3000
+
+### 1. Buscar uma demanda pelo id -> esperado: 200, com todos os campos
+GET {{baseUrl}}/demandas/1
+
+### 2. Listar os comentários da demanda 1 -> esperado: 200
+GET {{baseUrl}}/demandas/1/comentarios
+
+### 3. Demanda sem comentários -> esperado: 200 com lista vazia []
+GET {{baseUrl}}/demandas/3/comentarios
+
+### 4. Registrar um comentário válido (usuário 2 = Murilo) -> esperado: 201, com data e hora criadas pelo servidor
+POST {{baseUrl}}/demandas/3/comentarios
+Content-Type: application/json
+
+{
+  "texto": "Ótimo trabalho, o README ficou bem claro!",
+  "usuarioId": 2
+}
+
+### 5. Conferir que o comentário novo aparece na lista -> esperado: 200
+GET {{baseUrl}}/demandas/3/comentarios
+
+### ERRO 1: demanda que não existe -> esperado: 404
+GET {{baseUrl}}/demandas/999
+
+### ERRO 2: comentários de uma demanda que não existe -> esperado: 404
+GET {{baseUrl}}/demandas/999/comentarios
+
+### ERRO 3: comentar em uma demanda que não existe -> esperado: 404
+POST {{baseUrl}}/demandas/999/comentarios
+Content-Type: application/json
+
+{
+  "texto": "Comentário em demanda inexistente",
+  "usuarioId": 2
+}
+
+### ERRO 4: comentário com texto vazio (só espaços) -> esperado: 400
+POST {{baseUrl}}/demandas/1/comentarios
+Content-Type: application/json
+
+{
+  "texto": "     ",
+  "usuarioId": 2
+}
+
+### ERRO 5: comentário sem informar o usuário -> esperado: 400
+POST {{baseUrl}}/demandas/1/comentarios
+Content-Type: application/json
+
+{
+  "texto": "Comentário sem usuário"
+}
+
+### ERRO 6: usuário que não existe -> esperado: 400
+POST {{baseUrl}}/demandas/1/comentarios
+Content-Type: application/json
+
+{
+  "texto": "Comentário de usuário inexistente",
+  "usuarioId": 99
+}
