@@ -1,0 +1,29 @@
+# Autor: Arthur de Senna Nardi Cortina
+#
+# Requisições de teste da rota GET /dashboard (Reunião 4).
+# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como
+# roteiro para o Thunder Client: copie o método e a URL de cada requisição.
+# Antes de testar, o servidor precisa estar rodando (npm run dev na pasta backend).
+
+@baseUrl = http://localhost:3000
+
+### 1. Dashboard completo -> esperado: 200
+GET {{baseUrl}}/dashboard
+
+### 2. Filtrar por prioridade -> esperado: 200
+GET {{baseUrl}}/dashboard?prioridade=Alta
+
+### 3. Filtrar por responsável (id 2 = Murilo Cunha) -> esperado: 200
+GET {{baseUrl}}/dashboard?responsavel=2
+
+### 4. Busca por texto (título, descrição ou nome do responsável) -> esperado: 200
+GET {{baseUrl}}/dashboard?busca=login
+
+### 5. Filtros combinados: prioridade Média + responsável 1 (Arthur) -> esperado: 200
+GET {{baseUrl}}/dashboard?prioridade=M%C3%A9dia&responsavel=1
+
+### ERRO 1: prioridade que não existe -> esperado: 400
+GET {{baseUrl}}/dashboard?prioridade=Urgentissima
+
+### ERRO 2: responsável que não é um número -> esperado: 400
+GET {{baseUrl}}/dashboard?responsavel=abc
