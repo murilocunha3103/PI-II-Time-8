@@ -5,3 +5,7 @@ node_modules/
 # OBS: Ainda sem nenhuma variável de ambiente no projeto e nem o arquivo .env
 # NUNCA COMMITAR O .ENV
 .env
+
+# Código JavaScript gerado pela compilação do TypeScript (npm run build).
+# É gerado automaticamente, então não precisa ir para o repositório.
+dist/
