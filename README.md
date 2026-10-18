@@ -36,7 +36,7 @@ base no Documento de Visão fornecido pelos professores orientadores.
 
 ```
 frontend/    → telas do sistema em HTML, CSS e script em JavaScript
-backend/     → API do sistema e backend em geral (fase futura, ainda não iniciada)
+backend/     → API do sistema (Node.js + TypeScript + Express)
 database/    → scripts do banco de dados (fase futura, ainda não iniciada)
 docs/        → documentação do grupo
 ```
@@ -52,3 +52,46 @@ docs/        → documentação do grupo
 Abra qualquer arquivo `.html` dentro de `frontend/pages/` diretamente no navegador
 (ou com a extensão Live Server do VS Code). Não é necessário instalar nada nesta etapa
 do projeto.
+
+## Como executar o backend (API)
+
+A API foi feita com **Node.js + TypeScript + Express**. Nesta etapa os dados ficam
+guardados em memória (não há banco de dados ainda).
+
+### Pré-requisitos
+
+* Node.js na versão **LTS** (download em https://nodejs.org/pt-br/download)
+* Conferir a instalação no terminal:
+
+```
+node --version
+npm --version
+```
+
+### Instalar as dependências e executar
+
+Dentro da pasta `backend/`:
+
+```
+cd backend
+npm install
+npm run dev
+```
+
+Quando aparecer `Servidor rodando na porta 3000`, a API está no ar em
+http://localhost:3000. Para parar o servidor, use `Ctrl + C` no terminal.
+
+### Outros comandos
+
+| Comando | O que faz |
+|---|---|
+| `npm run dev` | Inicia o servidor e reinicia sozinho quando um arquivo é salvo |
+| `npm run build` | Compila o TypeScript para JavaScript (pasta `dist/`) |
+| `npm start` | Executa o servidor já compilado (depois do `npm run build`) |
+
+### Rotas, dados de teste e como testar
+
+A lista completa de rotas, os usuários de teste (e-mails e senhas), os critérios do
+dashboard e o passo a passo para testar com Thunder Client estão em
+[backend/README.md](backend/README.md).
+
