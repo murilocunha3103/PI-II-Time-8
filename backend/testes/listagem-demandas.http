@@ -1,0 +1,71 @@
+# Autor: Murilo Xavier Sarra da Cunha
+#
+# Requisições de teste da rota GET /demandas (Reunião 4): filtros, busca e ordenação.
+# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como
+# roteiro para o Thunder Client: copie o método e a URL de cada requisição.
+# Antes de testar, o servidor precisa estar rodando (npm run dev na pasta backend).
+#
+# Observação: acentos e espaços na URL aparecem codificados (Crítica = Cr%C3%ADtica,
+# "Em andamento" = Em%20andamento). No Thunder Client e no navegador pode digitar normal.
+
+@baseUrl = http://localhost:3000
+
+### 1. Listar todas as demandas -> esperado: 200 (lista com as 18 demandas de teste)
+GET {{baseUrl}}/demandas
+
+### 2. Filtrar por status -> esperado: 200
+GET {{baseUrl}}/demandas?status=Aberta
+
+### 3. Filtrar por DOIS critérios: status Aberta + prioridade Crítica -> esperado: 200 (demandas 1 e 14)
+GET {{baseUrl}}/demandas?status=Aberta&prioridade=Cr%C3%ADtica
+
+### 4. Filtrar por status + tipo: Em andamento + Tarefa -> esperado: 200
+GET {{baseUrl}}/demandas?status=Em%20andamento&tipo=Tarefa
+
+### 5. Filtrar por projeto -> esperado: 200 (demandas do projeto 3)
+GET {{baseUrl}}/demandas?projeto=3
+
+### 6. Filtrar por responsável (id 2 = Murilo) e projeto -> esperado: 200
+GET {{baseUrl}}/demandas?responsavel=2&projeto=1
+
+### 7. Busca por texto no título ou na descrição -> esperado: 200
+GET {{baseUrl}}/demandas?busca=login
+
+### 8. Busca sem acento também encontra palavras com acento -> esperado: 200 (acha "comentários")
+GET {{baseUrl}}/demandas?busca=comentarios
+
+### 9. Busca que não encontra nada -> esperado: 200 com lista vazia []
+GET {{baseUrl}}/demandas?busca=zzzzzz
+
+### 10. Ordenar por prioridade (da mais urgente para a menos urgente) -> esperado: 200
+GET {{baseUrl}}/demandas?ordenarPor=prioridade
+
+### 11. Ordenar por prioridade, ordem inversa -> esperado: 200
+GET {{baseUrl}}/demandas?ordenarPor=prioridade&ordem=desc
+
+### 12. Ordenar por prazo de finalização (sem prazo vai para o final) -> esperado: 200
+GET {{baseUrl}}/demandas?ordenarPor=prazo
+
+### 13. Ordenar por data de criação -> esperado: 200
+GET {{baseUrl}}/demandas?ordenarPor=dataCriacao
+
+### 14. Ordenar por status (segue o fluxo Aberta > Em andamento > ... > Cancelada) -> esperado: 200
+GET {{baseUrl}}/demandas?ordenarPor=status
+
+### 15. Combinando: projeto 1 + busca "tela" + ordenado por prioridade -> esperado: 200
+GET {{baseUrl}}/demandas?projeto=1&busca=tela&ordenarPor=prioridade
+
+### ERRO 1: status que não existe -> esperado: 400
+GET {{baseUrl}}/demandas?status=Pendente
+
+### ERRO 2: tipo que não existe -> esperado: 400
+GET {{baseUrl}}/demandas?tipo=Bug
+
+### ERRO 3: projeto que não é número -> esperado: 400
+GET {{baseUrl}}/demandas?projeto=abc
+
+### ERRO 4: campo de ordenação inválido -> esperado: 400
+GET {{baseUrl}}/demandas?ordenarPor=titulo
+
+### ERRO 5: ordem inválida -> esperado: 400
+GET {{baseUrl}}/demandas?ordenarPor=prazo&ordem=cima
