@@ -1,0 +1,70 @@
+# Autor: Gabriel Passarela Silva
+#
+# Requisições de teste das rotas POST /login e GET /usuarios (Reunião 4).
+# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como
+# roteiro para o Thunder Client: copie o método, a URL e o corpo (JSON) de cada requisição.
+# Antes de testar, o servidor precisa estar rodando (npm run dev na pasta backend).
+
+@baseUrl = http://localhost:3000
+
+### 1. Login válido (Membro da Equipe) -> esperado: 200, com os dados do usuário e SEM a senha
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "gabriel@dominio.com",
+  "senha": "Membro@123"
+}
+
+### 2. Login válido (Administrador) -> esperado: 200
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "arthur@dominio.com",
+  "senha": "Admin@123"
+}
+
+### 3. Login válido (Líder de Projeto) -> esperado: 200
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "murilo@dominio.com",
+  "senha": "Lider@123"
+}
+
+### 4. Listar usuários -> esperado: 200, lista sem as senhas
+GET {{baseUrl}}/usuarios
+
+### ERRO 1: senha ausente -> esperado: 400
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "gabriel@dominio.com"
+}
+
+### ERRO 2: corpo vazio -> esperado: 400
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{}
+
+### ERRO 3: senha incorreta -> esperado: 401
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "gabriel@dominio.com",
+  "senha": "SenhaErrada1!"
+}
+
+### ERRO 4: e-mail que não está cadastrado -> esperado: 401
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "naoexiste@dominio.com",
+  "senha": "Membro@123"
+}
