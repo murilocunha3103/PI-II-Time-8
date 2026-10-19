@@ -1,0 +1,135 @@
+# Autor: Kevin Eziquiel Lima
+#
+# Requisições de teste das rotas POST /demandas e GET /projetos (Reunião 4).
+# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como
+# roteiro para o Thunder Client: copie o método, a URL e o corpo (JSON) de cada requisição.
+# Antes de testar, o servidor precisa estar rodando (npm run dev na pasta backend).
+
+@baseUrl = http://localhost:3000
+
+### 1. Listar os projetos -> esperado: 200
+GET {{baseUrl}}/projetos
+
+### 2. Cadastrar demanda completa -> esperado: 201 (status "Aberta" e datas criados pelo servidor)
+POST {{baseUrl}}/demandas
+Content-Type: application/json
+
+{
+  "titulo": "Criar tela de relatórios",
+  "descricao": "Montar a tela de relatórios do portal.",
+  "tipo": "Tarefa",
+  "prioridade": "Alta",
+  "projetoId": 2,
+  "responsavelId": 5,
+  "prazo": "2026-12-15"
+}
+
+### 3. Cadastrar demanda só com os campos obrigatórios (sem responsável e sem prazo) -> esperado: 201
+POST {{baseUrl}}/demandas
+Content-Type: application/json
+
+{
+  "titulo": "Revisar textos das telas",
+  "descricao": "Revisar a ortografia dos textos de todas as telas.",
+  "tipo": "Documentação",
+  "prioridade": "Baixa",
+  "projetoId": 1
+}
+
+### 4. Tentar forçar status e datas -> esperado: 201, mas status continua "Aberta" e as datas são as de agora
+POST {{baseUrl}}/demandas
+Content-Type: application/json
+
+{
+  "titulo": "Tentativa de definir o status na criação",
+  "descricao": "O status e as datas enviados devem ser ignorados.",
+  "tipo": "Defeito",
+  "prioridade": "Média",
+  "projetoId": 1,
+  "status": "Concluída",
+  "dataCriacao": "1999-01-01T00:00:00Z"
+}
+
+### 5. Conferir que as demandas criadas aparecem na listagem -> esperado: 200
+GET {{baseUrl}}/demandas
+
+### ERRO 1: corpo vazio (devolve TODOS os problemas de uma vez) -> esperado: 400
+POST {{baseUrl}}/demandas
+Content-Type: application/json
+
+{}
+
+### ERRO 2: tipo que não existe -> esperado: 400
+POST {{baseUrl}}/demandas
+Content-Type: application/json
+
+{
+  "titulo": "Demanda com tipo errado",
+  "descricao": "Tipo Bug não é permitido.",
+  "tipo": "Bug",
+  "prioridade": "Alta",
+  "projetoId": 1
+}
+
+### ERRO 3: prioridade que não existe -> esperado: 400
+POST {{baseUrl}}/demandas
+Content-Type: application/json
+
+{
+  "titulo": "Demanda com prioridade errada",
+  "descricao": "Prioridade Urgente não é permitida.",
+  "tipo": "Tarefa",
+  "prioridade": "Urgente",
+  "projetoId": 1
+}
+
+### ERRO 4: projeto que não existe -> esperado: 400
+POST {{baseUrl}}/demandas
+Content-Type: application/json
+
+{
+  "titulo": "Demanda em projeto inexistente",
+  "descricao": "O projeto 99 não existe.",
+  "tipo": "Tarefa",
+  "prioridade": "Alta",
+  "projetoId": 99
+}
+
+### ERRO 5: responsável que não existe -> esperado: 400
+POST {{baseUrl}}/demandas
+Content-Type: application/json
+
+{
+  "titulo": "Demanda com responsável inexistente",
+  "descricao": "O usuário 99 não existe.",
+  "tipo": "Tarefa",
+  "prioridade": "Alta",
+  "projetoId": 1,
+  "responsavelId": 99
+}
+
+### ERRO 6: prazo em formato errado -> esperado: 400
+POST {{baseUrl}}/demandas
+Content-Type: application/json
+
+{
+  "titulo": "Demanda com prazo errado",
+  "descricao": "O prazo deve estar no formato AAAA-MM-DD.",
+  "tipo": "Tarefa",
+  "prioridade": "Alta",
+  "projetoId": 1,
+  "prazo": "30/11/2026"
+}
+
+### ERRO 7: prazo com dia que não existe (31 de fevereiro) -> esperado: 400
+POST {{baseUrl}}/demandas
+Content-Type: application/json
+
+{
+  "titulo": "Demanda com data impossível",
+  "descricao": "Não existe 31 de fevereiro.",
+  "tipo": "Tarefa",
+  "prioridade": "Alta",
+  "projetoId": 1,
+  "prazo": "2026-02-31"
+}
