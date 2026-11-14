@@ -1,0 +1,115 @@
+# Autor: Joao Victor Nunes Soares
+#
+# Requisições de teste: rota PATCH /demandas/:id/status (Reunião 5): ciclo de vida e permissões por perfil
+# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como roteiro para o
+# Thunder Client: copie o método, a URL e o corpo; nas rotas que exigem login, abra a aba
+# Auth -> Bearer e cole o token recebido no POST /login.
+# Antes de testar: o banco criado (database/01 e 02), o .env configurado e o servidor rodando
+# (npm run dev na pasta backend).
+#
+# Atenção: algumas requisições ALTERAM os dados (cadastram, mudam status, cancelam). Para repetir os
+# testes do zero, rode no SQL Developer: 00_remover_tabelas.sql, 01_criar_tabelas.sql e 02_dados_teste.sql.
+# A sequência abaixo usa a demanda 10 (status Em andamento, responsável Kevin) e deve ser feita NA ORDEM.
+
+@baseUrl = http://localhost:3000
+
+### Login como Líder de Projeto (joao@dominio.com) -> esperado: 200, com "token" e "usuario"
+# @name lider
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "joao@dominio.com", "senha": "Lider@123" }
+
+###
+@token_lider = {{lider.response.body.token}}
+
+### Login como Membro da Equipe (responsável pela demanda 10) (kevin@dominio.com) -> esperado: 200, com "token" e "usuario"
+# @name membro
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "kevin@dominio.com", "senha": "Membro@123" }
+
+###
+@token_membro = {{membro.response.body.token}}
+
+### 1. Líder tenta concluir direto de Em andamento -> 400 (não está previsto no ciclo de vida)
+PATCH {{baseUrl}}/demandas/10/status
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "status": "Concluída" }
+
+### 2. Líder tenta voltar para Aberta -> 400
+PATCH {{baseUrl}}/demandas/10/status
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "status": "Aberta" }
+
+### 3. Status que não existe -> 400
+PATCH {{baseUrl}}/demandas/10/status
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "status": "Pendente" }
+
+### 4. Sem informar o status -> 400
+PATCH {{baseUrl}}/demandas/10/status
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{}
+
+### 5. Cancelar por esta rota -> 400 (o cancelamento tem rota própria)
+PATCH {{baseUrl}}/demandas/10/status
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "status": "Cancelada" }
+
+### 6. O Membro responsável passa Em andamento -> Em revisão -> 200
+PATCH {{baseUrl}}/demandas/10/status
+Authorization: Bearer {{token_membro}}
+Content-Type: application/json
+
+{ "status": "Em revisão" }
+
+### 7. O Membro tenta concluir -> 403 (só Líder e Administrador concluem)
+PATCH {{baseUrl}}/demandas/10/status
+Authorization: Bearer {{token_membro}}
+Content-Type: application/json
+
+{ "status": "Concluída" }
+
+### 8. O Líder conclui (Em revisão -> Concluída) -> 200
+PATCH {{baseUrl}}/demandas/10/status
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "status": "Concluída" }
+
+### 9. Demanda Concluída não muda mais -> 400
+PATCH {{baseUrl}}/demandas/10/status
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "status": "Em andamento" }
+
+### 10. Conferir o histórico -> 200: duas mudanças de status, com o nome de quem fez cada uma
+GET {{baseUrl}}/demandas/10/historico
+Authorization: Bearer {{token_lider}}
+
+### 11. Demanda inexistente -> 404
+PATCH {{baseUrl}}/demandas/999/status
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "status": "Em andamento" }
+
+### 12. SEM token -> 401
+PATCH {{baseUrl}}/demandas/10/status
+Content-Type: application/json
+
+{ "status": "Em andamento" }
+
