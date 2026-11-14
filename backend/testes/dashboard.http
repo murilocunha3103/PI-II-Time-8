@@ -1,29 +1,73 @@
 # Autor: Arthur de Senna Nardi Cortina
 #
-# Requisições de teste da rota GET /dashboard (Reunião 4).
-# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como
-# roteiro para o Thunder Client: copie o método e a URL de cada requisição.
-# Antes de testar, o servidor precisa estar rodando (npm run dev na pasta backend).
+# Requisições de teste: rota GET /dashboard (Reunião 5)
+# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como roteiro para o
+# Thunder Client: copie o método, a URL e o corpo; nas rotas que exigem login, abra a aba
+# Auth -> Bearer e cole o token recebido no POST /login.
+# Antes de testar: o banco criado (database/01 e 02), o .env configurado e o servidor rodando
+# (npm run dev na pasta backend).
+#
+# Atenção: algumas requisições ALTERAM os dados (cadastram, mudam status, cancelam). Para repetir os
+# testes do zero, rode no SQL Developer: 00_remover_tabelas.sql, 01_criar_tabelas.sql e 02_dados_teste.sql.
 
 @baseUrl = http://localhost:3000
 
-### 1. Dashboard completo -> esperado: 200
+### Login como Administrador (arthur@dominio.com) -> esperado: 200, com "token" e "usuario"
+# @name admin
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "arthur@dominio.com", "senha": "Admin@123" }
+
+###
+@token_admin = {{admin.response.body.token}}
+
+### Login como Membro da Equipe (gabriel@dominio.com) -> esperado: 200, com "token" e "usuario"
+# @name membro
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "gabriel@dominio.com", "senha": "Membro@123" }
+
+###
+@token_membro = {{membro.response.body.token}}
+
+### 1. Dashboard completo (Administrador) -> 200: totalDemandas 18; porStatus 5/4/3/4/2; porPrioridade 4/5/5/4; porTipo 5/4/6/3; criticasEmAberto = demandas 1 e 14; proximasDoPrazo = 7 demandas
+GET {{baseUrl}}/dashboard
+Authorization: Bearer {{token_admin}}
+
+### 2. Filtrar por prioridade -> 200: totalDemandas 5
+GET {{baseUrl}}/dashboard?prioridade=Alta
+Authorization: Bearer {{token_admin}}
+
+### 3. Filtrar por responsável (id 2 = Murilo) -> 200: totalDemandas 3
+GET {{baseUrl}}/dashboard?responsavel=2
+Authorization: Bearer {{token_admin}}
+
+### 4. Filtrar por projeto -> 200: totalDemandas 10
+GET {{baseUrl}}/dashboard?projeto=1
+Authorization: Bearer {{token_admin}}
+
+### 5. Busca por texto -> 200: totalDemandas 2 (demandas 1 e 9)
+GET {{baseUrl}}/dashboard?busca=login
+Authorization: Bearer {{token_admin}}
+
+### 6. Dois filtros juntos (prioridade Média + responsável 1) -> 200: totalDemandas 1
+GET {{baseUrl}}/dashboard?prioridade=Média&responsavel=1
+Authorization: Bearer {{token_admin}}
+
+### 7. Dashboard do Membro Gabriel -> 200: totalDemandas 13 (só os projetos 1 e 3, onde ele está vinculado)
+GET {{baseUrl}}/dashboard
+Authorization: Bearer {{token_membro}}
+
+### 8. Prioridade inválida -> 400, com a lista dos valores aceitos
+GET {{baseUrl}}/dashboard?prioridade=Urgente
+Authorization: Bearer {{token_admin}}
+
+### 9. Responsável que não é número -> 400
+GET {{baseUrl}}/dashboard?responsavel=abc
+Authorization: Bearer {{token_admin}}
+
+### 10. SEM token -> 401 (Sessão inválida ou expirada)
 GET {{baseUrl}}/dashboard
 
-### 2. Filtrar por prioridade -> esperado: 200
-GET {{baseUrl}}/dashboard?prioridade=Alta
-
-### 3. Filtrar por responsável (id 2 = Murilo Cunha) -> esperado: 200
-GET {{baseUrl}}/dashboard?responsavel=2
-
-### 4. Busca por texto (título, descrição ou nome do responsável) -> esperado: 200
-GET {{baseUrl}}/dashboard?busca=login
-
-### 5. Filtros combinados: prioridade Média + responsável 1 (Arthur) -> esperado: 200
-GET {{baseUrl}}/dashboard?prioridade=M%C3%A9dia&responsavel=1
-
-### ERRO 1: prioridade que não existe -> esperado: 400
-GET {{baseUrl}}/dashboard?prioridade=Urgentissima
-
-### ERRO 2: responsável que não é um número -> esperado: 400
-GET {{baseUrl}}/dashboard?responsavel=abc

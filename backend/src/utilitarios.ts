@@ -1,54 +1,49 @@
 // Autor: Arthur de Senna Nardi Cortina
 //
-// Funções auxiliares usadas por várias rotas da API. Ficam aqui para ninguém
-// precisar copiar e colar o mesmo código em arquivos diferentes.
+// Funções auxiliares usadas por várias rotas da API.
 
-// Lê um valor que veio da URL (req.query) ou do corpo (req.body) e devolve como
-// texto sem espaços nas pontas. Se não for texto, devolve "" (vazio).
-// Isso evita erro quando alguém envia, por exemplo, um número ou uma lista no lugar do texto.
+// Converte qualquer valor recebido (query, body) em texto sem espaços nas pontas.
+// Se não for texto, devolve "" (assim nada quebra com valores inesperados).
+// Atenção: no Oracle, texto vazio ("") é o mesmo que NULL.
 export function textoOuVazio(valor: unknown): string {
-  if (typeof valor === 'string') {
+  if (typeof valor === "string") {
     return valor.trim();
   }
-  return '';
+  return "";
 }
 
-// Remove os acentos de um texto: "Crítica" vira "Critica". Usado para comparar textos
-// sem se importar com acento (assim "formulario" também encontra "formulário").
+// Remove os acentos de um texto: "Crítica" vira "Critica". Usada para comparar sem se
+// importar com acento.
 export function semAcento(texto: string): string {
-  return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-// Confere se o valor recebido é um dos valores permitidos, sem diferenciar maiúscula,
-// minúscula ou acento (ex.: "critica", "CRÍTICA" e "Crítica" valem como "Crítica").
-// Devolve o valor oficial da lista (com a grafia correta) ou null se não existir.
-export function encontrarValorValido<T extends string>(
-  valor: unknown,
-  validos: readonly T[],
-): T | null {
+// Procura um item de uma lista (tipos, prioridades, status) pelo nome, sem diferenciar
+// maiúscula/minúscula nem acento: "critica", "CRÍTICA" e "Crítica" encontram o mesmo item.
+export function encontrarPorNome<T extends { nome: string }>(lista: T[], valor: unknown): T | null {
   const procurado = semAcento(textoOuVazio(valor)).toLowerCase();
 
-  if (procurado === '') {
+  if (procurado === "") {
     return null;
   }
 
-  for (const valido of validos) {
-    if (semAcento(valido).toLowerCase() === procurado) {
-      return valido;
+  for (const item of lista) {
+    if (semAcento(item.nome).toLowerCase() === procurado) {
+      return item;
     }
   }
 
   return null;
 }
 
-// Converte um valor (número ou texto numérico) em número inteiro positivo.
-// Devolve null se não for um número inteiro positivo. Usado para ids.
+// Converte um valor (número ou texto, como o "2" que vem da URL) em número inteiro positivo.
+// Se não for possível, devolve null.
 export function lerNumeroInteiro(valor: unknown): number | null {
   let numero = NaN;
 
-  if (typeof valor === 'number') {
+  if (typeof valor === "number") {
     numero = valor;
-  } else if (typeof valor === 'string' && valor.trim() !== '') {
+  } else if (typeof valor === "string" && valor.trim() !== "") {
     numero = Number(valor.trim());
   }
 
@@ -59,47 +54,30 @@ export function lerNumeroInteiro(valor: unknown): number | null {
   return null;
 }
 
-// Confere se o texto é uma data real no formato AAAA-MM-DD.
-// "2026-10-25" é válida; "25/10/2026" (formato errado) e "2026-02-31" (dia que não
-// existe) são inválidas.
+// Confere se o texto é uma data real no formato AAAA-MM-DD (por exemplo, 2026-11-30).
+// Datas que não existem, como 2026-02-31, são recusadas.
 export function dataValida(texto: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(texto)) {
     return false;
   }
 
-  const ano = Number(texto.slice(0, 4));
-  const mes = Number(texto.slice(5, 7));
-  const dia = Number(texto.slice(8, 10));
-
-  // O JavaScript "corrige" datas impossíveis (31/02 vira março). Então criamos a data
-  // e conferimos se ano, mês e dia continuam iguais aos que foram digitados.
+  const [ano, mes, dia] = texto.split("-").map(Number);
   const data = new Date(ano, mes - 1, dia);
 
   return data.getFullYear() === ano && data.getMonth() === mes - 1 && data.getDate() === dia;
 }
 
-// Devolve a data de hoje somada a "dias" (pode ser negativo), no formato AAAA-MM-DD.
-// dataEmDias(0) = hoje, dataEmDias(7) = daqui a 7 dias, dataEmDias(-3) = 3 dias atrás.
-export function dataEmDias(dias: number): string {
-  const data = new Date();
-  data.setDate(data.getDate() + dias);
-
-  const ano = data.getFullYear();
-  const mes = String(data.getMonth() + 1).padStart(2, '0');
-  const dia = String(data.getDate()).padStart(2, '0');
-
-  return ano + '-' + mes + '-' + dia;
+// Troca 2026-11-30 por 30/11/2026 (usada nas mensagens do histórico)
+export function dataParaBR(iso: string): string {
+  const partes = iso.split("-");
+  if (partes.length !== 3) {
+    return iso;
+  }
+  return partes[2] + "/" + partes[1] + "/" + partes[0];
 }
 
-// Devolve data e hora (formato ISO) de hoje somada a "dias". Usada nos dados de teste.
-export function dataHoraEmDias(dias: number): string {
-  const data = new Date();
-  data.setDate(data.getDate() + dias);
-  return data.toISOString();
-}
-
-// Devolve a data e hora de agora (formato ISO). O servidor usa isso para registrar
-// automaticamente a criação de demandas e comentários.
-export function agoraISO(): string {
-  return new Date().toISOString();
+// Prepara o texto digitado na busca para o comando LIKE do Oracle: tira acento, deixa
+// minúsculo e "escapa" os caracteres % _ \ (que têm significado especial no LIKE).
+export function prepararBusca(texto: string): string {
+  return semAcento(texto).toLowerCase().replace(/[\\%_]/g, (letra) => "\\" + letra);
 }

@@ -1,101 +1,19 @@
 // Autor: Arthur de Senna Nardi Cortina
 
-// Comportamento em JavaScript da tela de Dashboard (Reunião 3).
-
-// A lista "demandas" logo abaixo é TEMPORÁRIA - foi criada só pra demonstrar os
-// filtros e os indicadores funcionando nesta etapa do projeto, já que o backend
-// ainda não está pronto pra fornecer os dados de verdade. Quando o backend e o
-// banco de dados estiverem prontos, essa lista será substituída pelos dados reais.
-
-const demandas = [
-  {
-    titulo: 'Corrigir erro no login',
-    prioridade: 'critica',
-    status: 'aberta',
-    responsavel: 'Gabriel Passarela',
-    prazo: '2026-09-22',
-  },
-  {
-    titulo: 'Criar tela de dashboard',
-    prioridade: 'media',
-    status: 'andamento',
-    responsavel: 'Arthur de Senna',
-    prazo: '2026-09-25',
-  },
-  {
-    titulo: 'Escrever README do projeto',
-    prioridade: 'baixa',
-    status: 'concluida',
-    responsavel: 'Murilo Cunha',
-    prazo: '2026-09-15',
-  },
-  {
-    titulo: 'Validar formulario de cadastro',
-    prioridade: 'alta',
-    status: 'revisao',
-    responsavel: 'Kevin Lima',
-    prazo: '2026-09-21',
-  },
-  {
-    titulo: 'Implementar filtro na listagem',
-    prioridade: 'media',
-    status: 'andamento',
-    responsavel: 'Murilo Cunha',
-    prazo: '2026-09-28',
-  },
-  {
-    titulo: 'Adicionar comentarios na demanda',
-    prioridade: 'baixa',
-    status: 'concluida',
-    responsavel: 'Joao Victor',
-    prazo: '2026-09-18',
-  },
-  {
-    titulo: 'Ajustar responsividade do menu',
-    prioridade: 'baixa',
-    status: 'cancelada',
-    responsavel: 'Gabriel Passarela',
-    prazo: '2026-09-20',
-  },
-  {
-    titulo: 'Configurar servidor Node.js',
-    prioridade: 'alta',
-    status: 'concluida',
-    responsavel: 'Arthur de Senna',
-    prazo: '2026-09-19',
-  },
-  {
-    titulo: 'Revisar regras de senha',
-    prioridade: 'media',
-    status: 'aberta',
-    responsavel: 'Gabriel Passarela',
-    prazo: '2026-09-23',
-  },
-  {
-    titulo: 'Testar cancelamento de demanda',
-    prioridade: 'critica',
-    status: 'andamento',
-    responsavel: 'Joao Victor',
-    prazo: '2026-09-24',
-  },
-  {
-    titulo: 'Padronizar mensagens de erro',
-    prioridade: 'alta',
-    status: 'aberta',
-    responsavel: 'Kevin Lima',
-    prazo: '2026-10-05',
-  },
-  {
-    titulo: 'Revisar paleta de cores',
-    prioridade: 'baixa',
-    status: 'revisao',
-    responsavel: 'Murilo Cunha',
-    prazo: '2026-10-10',
-  },
-];
+// Comportamento em JavaScript da tela de Dashboard (Reunião 5).
+//
+// Na Reunião 3 esta tela calculava os indicadores a partir de uma lista temporária de demandas
+// escrita dentro do próprio arquivo. Agora os indicadores vêm da API (GET /dashboard), que os
+// calcula com os dados do banco de dados. Cada usuário vê apenas os números dos projetos que
+// enxerga (o Administrador vê todos).
+//
+// Esta tela usa três arquivos de apoio, carregados antes dela no HTML:
+//   - sessao.js: sessão do usuário (login), mensagens e formatação de datas;
+//   - api.js: as chamadas para a API (buscarDashboardApi, listarUsuariosApi, listarProjetosApi).
 
 // Campos da barra de filtros
 const campoBusca = document.querySelector('#busca-dashboard');
+const campoProjeto = document.querySelector('#filtro-projeto');
 const campoResponsavel = document.querySelector('#filtro-responsavel');
 const campoPrioridade = document.querySelector('#filtro-prioridade-dashboard');
 
@@ -110,109 +28,133 @@ const valorCriticas = document.querySelector('#valor-criticas');
 const valorPrazo = document.querySelector('#valor-prazo');
 const textoContagem = document.querySelector('#contagem-filtro');
 
-// Função principal: roda toda vez que a busca ou um dos filtros muda, e sempre
-// que a página carrega pela primeira vez (chamada lá no final do arquivo).
-function aplicarFiltros() {
-  const textoBusca = campoBusca.value.trim().toLowerCase();
-  const responsavelEscolhido = campoResponsavel.value;
-  const prioridadeEscolhida = campoPrioridade.value;
+// Listas de demandas críticas em aberto e de demandas próximas do prazo
+const listaCriticas = document.querySelector('#lista-criticas');
+const listaPrazo = document.querySelector('#lista-prazo');
 
-  // Contadores de cada indicador do dashboard, começando todos zerados
-  let total = 0;
-  let abertas = 0;
-  let andamento = 0;
-  let revisao = 0;
-  let concluidas = 0;
-  let canceladas = 0;
-  let criticasEmAberto = 0;
-  let proximasDoPrazo = 0;
+// Guarda qual foi a última consulta feita. Se uma resposta antiga chegar depois de uma mais nova
+// (por exemplo, a pessoa digitou rápido), ela é descartada.
+let numeroDaConsulta = 0;
+let temporizadorBusca = null;
 
-  // Data de hoje, sem hora, e a data de 7 dias a partir de hoje - usadas pra
-  // saber se uma demanda está "próxima do prazo"
-  const hoje = new Date();
-  hoje.setHours(0, 0, 0, 0);
-
-  const seteDiasDepois = new Date(hoje);
-  seteDiasDepois.setDate(seteDiasDepois.getDate() + 7);
-
-  demandas.forEach(function (demanda) {
-    const bateComBusca =
-      demanda.titulo.toLowerCase().includes(textoBusca) ||
-      demanda.responsavel.toLowerCase().includes(textoBusca);
-
-    const bateComResponsavel =
-      responsavelEscolhido === '' || responsavelEscolhido === demanda.responsavel;
-    const bateComPrioridade =
-      prioridadeEscolhida === '' || prioridadeEscolhida === demanda.prioridade;
-
-    // A demanda só entra na contagem se passar nos três critérios ao mesmo tempo
-    if (bateComBusca && bateComResponsavel && bateComPrioridade) {
-      total = total + 1;
-
-      if (demanda.status === 'aberta') {
-        abertas = abertas + 1;
-      }
-
-      if (demanda.status === 'andamento') {
-        andamento = andamento + 1;
-      }
-
-      if (demanda.status === 'revisao') {
-        revisao = revisao + 1;
-      }
-
-      if (demanda.status === 'concluida') {
-        concluidas = concluidas + 1;
-      }
-
-      if (demanda.status === 'cancelada') {
-        canceladas = canceladas + 1;
-      }
-
-      if (demanda.prioridade === 'critica' && demanda.status === 'aberta') {
-        criticasEmAberto = criticasEmAberto + 1;
-      }
-
-      const dataDoPrazo = new Date(demanda.prazo + 'T00:00:00');
-      const aindaNaoFinalizada = demanda.status !== 'concluida' && demanda.status !== 'cancelada';
-
-      if (aindaNaoFinalizada && dataDoPrazo >= hoje && dataDoPrazo <= seteDiasDepois) {
-        proximasDoPrazo = proximasDoPrazo + 1;
-      }
-    }
-  });
-
-  // Escreve os números calculados em cada card
-  valorTotal.innerText = total;
-  valorAbertas.innerText = abertas;
-  valorAndamento.innerText = andamento;
-  valorRevisao.innerText = revisao;
-  valorConcluidas.innerText = concluidas;
-  valorCanceladas.innerText = canceladas;
-  valorCriticas.innerText = criticasEmAberto;
-  valorPrazo.innerText = proximasDoPrazo;
-
-  textoContagem.innerText =
-    'Mostrando ' + total + ' de ' + demandas.length + ' demandas cadastradas.';
+// Escreve no card o valor de um indicador que vem como objeto { nome: quantidade }.
+// Ex.: preencherCard('#valor-prioridade-alta', dados.porPrioridade['Alta'])
+function escreverNumero(seletor, valor) {
+  document.querySelector(seletor).textContent = valor === undefined ? 0 : valor;
 }
 
-// "Ouvintes" de evento: toda vez que a pessoa digita na busca ou muda um dos
-// selects, os cards são recalculados.
+// Monta uma lista (críticas ou próximas do prazo) com um link para os detalhes de cada demanda
+function preencherLista(elementoLista, demandas, formatarDetalhe) {
+  elementoLista.innerHTML = '';
 
-// Um cuidado especial na busca: se a pessoa já tiver um responsável selecionado
-// no filtro e começar a digitar um nome diferente na busca, os dois filtros iam
-// "brigar" entre si (a busca só acha o que também bate com o responsável
-// escolhido) e a tabela ficaria sempre zerada, sem a pessoa entender o porquê.
-// Por isso, toda vez que a busca é usada, o filtro de responsável é limpo antes.
+  if (demandas.length === 0) {
+    elementoLista.innerHTML = '<li class="detalhe-item">Nenhuma demanda nesta situação.</li>';
+    return;
+  }
 
+  demandas.forEach(function (demanda) {
+    elementoLista.innerHTML +=
+      '<li>' +
+      '<a href="demanda-detalhes.html?id=' + demanda.id + '">' + escaparHtml(demanda.titulo) + '</a>' +
+      '<span class="detalhe-item">' + escaparHtml(formatarDetalhe(demanda)) + '</span>' +
+      '</li>';
+  });
+}
+
+// Escreve todos os números recebidos da API nos cards e nas listas
+function mostrarIndicadores(dados) {
+  valorTotal.textContent = dados.totalDemandas;
+  valorAbertas.textContent = dados.porStatus['Aberta'];
+  valorAndamento.textContent = dados.porStatus['Em andamento'];
+  valorRevisao.textContent = dados.porStatus['Em revisão'];
+  valorConcluidas.textContent = dados.porStatus['Concluída'];
+  valorCanceladas.textContent = dados.porStatus['Cancelada'];
+  valorCriticas.textContent = dados.criticasEmAberto.quantidade;
+  valorPrazo.textContent = dados.proximasDoPrazo.quantidade;
+
+  escreverNumero('#valor-prioridade-critica', dados.porPrioridade['Crítica']);
+  escreverNumero('#valor-prioridade-alta', dados.porPrioridade['Alta']);
+  escreverNumero('#valor-prioridade-media', dados.porPrioridade['Média']);
+  escreverNumero('#valor-prioridade-baixa', dados.porPrioridade['Baixa']);
+
+  escreverNumero('#valor-tipo-tarefa', dados.porTipo['Tarefa']);
+  escreverNumero('#valor-tipo-defeito', dados.porTipo['Defeito']);
+  escreverNumero('#valor-tipo-melhoria', dados.porTipo['Melhoria']);
+  escreverNumero('#valor-tipo-documentacao', dados.porTipo['Documentação']);
+
+  preencherLista(listaCriticas, dados.criticasEmAberto.demandas, function (demanda) {
+    return demanda.projeto.nome + ' | Responsável: ' + (demanda.responsavel ? demanda.responsavel.nome : 'Não atribuído');
+  });
+
+  preencherLista(listaPrazo, dados.proximasDoPrazo.demandas, function (demanda) {
+    return demanda.projeto.nome + ' | Prazo: ' + formatarData(demanda.prazo) + ' | ' + demanda.status;
+  });
+
+  textoContagem.textContent = 'Indicadores calculados sobre ' + dados.totalDemandas + ' demanda(s).';
+}
+
+// Função principal: roda toda vez que a busca ou um dos filtros muda, e quando a página carrega.
+// Lê os filtros da tela, pede os indicadores à API e escreve o resultado nos cards.
+async function carregarDashboard() {
+  numeroDaConsulta = numeroDaConsulta + 1;
+  const consultaAtual = numeroDaConsulta;
+
+  try {
+    const dados = await buscarDashboardApi({
+      busca: campoBusca.value.trim(),
+      projeto: campoProjeto.value,
+      responsavel: campoResponsavel.value,
+      prioridade: campoPrioridade.value,
+    });
+
+    if (consultaAtual !== numeroDaConsulta) {
+      return; // chegou uma resposta velha: ignora
+    }
+
+    limparMensagem();
+    mostrarIndicadores(dados);
+  } catch (erro) {
+    mostrarErroDaApi(erro);
+  }
+}
+
+// Preenche as opções dos filtros de projeto e de responsável com os dados do banco
+async function carregarOpcoesDosFiltros() {
+  try {
+    const projetos = await listarProjetosApi();
+    projetos.forEach(function (projeto) {
+      campoProjeto.innerHTML += '<option value="' + projeto.id + '">' + escaparHtml(projeto.nome) + '</option>';
+    });
+
+    const usuarios = await listarUsuariosApi();
+    usuarios.forEach(function (usuario) {
+      campoResponsavel.innerHTML += '<option value="' + usuario.id + '">' + escaparHtml(usuario.nome) + '</option>';
+    });
+  } catch (erro) {
+    mostrarErroDaApi(erro);
+  }
+}
+
+// "Ouvintes" de evento: toda vez que a pessoa digita na busca ou muda um dos selects, os
+// indicadores são pedidos de novo à API.
+
+// Um cuidado especial na busca: a busca também procura pelo nome do responsável. Se a pessoa já
+// tiver um responsável selecionado no filtro e começar a digitar um nome diferente, os dois
+// filtros iam "brigar" entre si e tudo ficaria zerado. Por isso, toda vez que a busca é usada, o
+// filtro de responsável é limpo antes. A espera de 0,3 s evita pedir à API a cada letra digitada.
 function buscarPorNome() {
   campoResponsavel.value = '';
-  aplicarFiltros();
+  clearTimeout(temporizadorBusca);
+  temporizadorBusca = setTimeout(carregarDashboard, 300);
 }
 
 campoBusca.addEventListener('input', buscarPorNome);
-campoResponsavel.addEventListener('change', aplicarFiltros);
-campoPrioridade.addEventListener('change', aplicarFiltros);
+campoProjeto.addEventListener('change', carregarDashboard);
+campoResponsavel.addEventListener('change', carregarDashboard);
+campoPrioridade.addEventListener('change', carregarDashboard);
 
-// Roda uma vez assim que a página carrega, pra já mostrar os totais completos
-aplicarFiltros();
+// Roda uma vez assim que a página carrega: só continua se houver um usuário logado
+if (exigirLogin()) {
+  carregarOpcoesDosFiltros();
+  carregarDashboard();
+}

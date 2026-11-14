@@ -12,6 +12,7 @@
   --cor-texto-claro: #7A6F5D;
   --cor-borda: #DCD0BC;
   --cor-borda-forte: #2B2118;
+  --cor-erro: #8C2F1E; /* mensagens de erro e campo inválido (o mesmo vermelho-tijolo da prioridade Crítica) */
 
   /* Cores de prioridade da demanda */
   --cor-prioridade-critica: #8C2F1E;
