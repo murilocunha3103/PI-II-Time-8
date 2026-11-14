@@ -27,35 +27,77 @@
 
     <div class="cabecalho-lista">
       <h1>Demandas</h1>
-      <a href="demanda-form.html" class="botao-nova-demanda">Nova demanda</a>
+      <!-- Só o Administrador e o Líder de Projeto criam demandas: o JavaScript esconde o botão para o Membro -->
+      <a href="demanda-form.html" class="botao-nova-demanda" id="botao-nova-demanda">Nova demanda</a>
     </div>
 
+    <!-- Aqui aparecem as mensagens de erro vindas da API -->
+    <div id="areaMensagem"></div>
+
     <!--
-      Esta tela não tem um formulário com botão de "enviar" - o comportamento em
-      JavaScript aqui (demandas-lista.js) é filtrar a tabela em tempo real conforme
-      a pessoa digita na busca ou escolhe um status/prioridade, sem precisar de
-      recarregar a página. Os ids abaixo (busca-demanda, filtro-status,
-      filtro-prioridade) são o que o JavaScript usa para "ouvir" essas mudanças.
+      Esta tela não tem um formulário com botão de "enviar": a cada letra digitada na busca, ou a cada
+      filtro escolhido, o demandas-lista.js pede à API (GET /demandas) a lista já filtrada e ordenada,
+      sem recarregar a página. Os ids abaixo são o que o JavaScript usa para "ouvir" essas mudanças.
+      Os valores dos <option> são os mesmos nomes que a API aceita (ela ignora acento e maiúscula).
+      As opções de projeto e de responsável são preenchidas pelo JavaScript, com dados do banco.
     -->
     <div class="barra-filtros">
-      <input type="text" id="busca-demanda" placeholder="Buscar por título">
+      <input type="text" id="busca-demanda" placeholder="Buscar por título, descrição ou responsável">
 
       <select id="filtro-status">
         <option value="">Status</option>
-        <option value="aberta">Aberta</option>
-        <option value="andamento">Em andamento</option>
-        <option value="revisao">Em revisão</option>
-        <option value="concluida">Concluída</option>
-        <option value="cancelada">Cancelada</option>
+        <option value="Aberta">Aberta</option>
+        <option value="Em andamento">Em andamento</option>
+        <option value="Em revisão">Em revisão</option>
+        <option value="Concluída">Concluída</option>
+        <option value="Cancelada">Cancelada</option>
       </select>
 
       <select id="filtro-prioridade">
         <option value="">Prioridade</option>
-        <option value="critica">Crítica</option>
-        <option value="alta">Alta</option>
-        <option value="media">Média</option>
-        <option value="baixa">Baixa</option>
+        <option value="Crítica">Crítica</option>
+        <option value="Alta">Alta</option>
+        <option value="Média">Média</option>
+        <option value="Baixa">Baixa</option>
       </select>
+
+      <select id="filtro-tipo">
+        <option value="">Tipo</option>
+        <option value="Tarefa">Tarefa</option>
+        <option value="Defeito">Defeito</option>
+        <option value="Melhoria">Melhoria</option>
+        <option value="Documentação">Documentação</option>
+      </select>
+
+      <select id="filtro-projeto">
+        <option value="">Projeto</option>
+      </select>
+
+      <select id="filtro-responsavel">
+        <option value="">Responsável</option>
+      </select>
+
+      <label class="filtro-minhas">
+        <input type="checkbox" id="filtro-minhas"> Somente as minhas
+      </label>
+    </div>
+
+    <div class="barra-ordenacao">
+      <label for="ordenar-por">Ordenar por</label>
+      <select id="ordenar-por">
+        <option value="">Ordem de cadastro</option>
+        <option value="prioridade">Prioridade</option>
+        <option value="dataCriacao">Data de criação</option>
+        <option value="prazo">Prazo de finalização</option>
+        <option value="status">Status</option>
+      </select>
+
+      <select id="ordem-crescente">
+        <option value="asc">Crescente</option>
+        <option value="desc">Decrescente</option>
+      </select>
+
+      <span class="contagem-resultados" id="contagem-resultados"></span>
     </div>
 
     <table class="tabela-demandas" id="tabela-demandas">
@@ -65,45 +107,22 @@
           <th>Tipo</th>
           <th>Prioridade</th>
           <th>Status</th>
+          <th>Projeto</th>
           <th>Responsável</th>
+          <th>Criada em</th>
           <th>Prazo</th>
         </tr>
       </thead>
-      <!--
-        Cada <tr> tem data-status e data-prioridade com o MESMO valor usado nos
-        <option> dos selects acima. É assim que o JavaScript compara "o que foi
-        escolhido no filtro" com "o que essa linha representa".
-      -->
+      <!-- As linhas são criadas pelo JavaScript, a partir das demandas que vêm do banco de dados -->
       <tbody id="corpo-tabela">
-        <tr data-status="aberta" data-prioridade="critica">
-          <td><a href="demanda-detalhes.html">Corrigir erro no login</a></td>
-          <td>Defeito</td>
-          <td><span class="etiqueta etiqueta-critica">Crítica</span></td>
-          <td><span class="etiqueta etiqueta-aberta">Aberta</span></td>
-          <td>Não atribuído</td>
-          <td>--/--/----</td>
-        </tr>
-        <tr data-status="andamento" data-prioridade="media">
-          <td><a href="demanda-detalhes.html">Criar tela de dashboard</a></td>
-          <td>Tarefa</td>
-          <td><span class="etiqueta etiqueta-media">Média</span></td>
-          <td><span class="etiqueta etiqueta-andamento">Em andamento</span></td>
-          <td>Aluno Exemplo</td>
-          <td>--/--/----</td>
-        </tr>
-        <tr data-status="concluida" data-prioridade="baixa">
-          <td><a href="demanda-detalhes.html">Escrever README do projeto</a></td>
-          <td>Documentação</td>
-          <td><span class="etiqueta etiqueta-baixa">Baixa</span></td>
-          <td><span class="etiqueta etiqueta-concluida">Concluída</span></td>
-          <td>Aluno Exemplo</td>
-          <td>--/--/----</td>
-        </tr>
+        <tr class="linha-sem-resultado"><td colspan="8">Carregando demandas...</td></tr>
       </tbody>
     </table>
 
   </main>
 
+  <script src="../js/sessao.js"></script>
+  <script src="../js/api.js"></script>
   <script src="../js/demandas-lista.js"></script>
 </body>
 </html>
