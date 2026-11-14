@@ -28,25 +28,23 @@
     <h1>Dashboard</h1>
     <p class="descricao-pagina" id="contagem-filtro">Resumo geral das demandas cadastradas no sistema</p>
 
-    <!--
-      Barra de filtros do dashboard. Os ids abaixo são usados pelo dashboard.js
-      pra saber o que foi digitado/escolhido e recalcular os cards.
+    <!-- Aqui aparecem as mensagens de erro vindas da API (por exemplo, servidor fora do ar) -->
+    <div id="areaMensagem"></div>
 
-      Atenção: como esta tela ainda não está ligada ao backend, o dashboard.js
-      cria, só pra esta demonstração, uma lista temporária de demandas dentro do
-      próprio arquivo JavaScript. Quando o backend estiver pronto, essa lista vai
-      ser substituída pelos dados reais vindos do banco de dados.
+    <!--
+      Barra de filtros do dashboard. Os ids abaixo são usados pelo dashboard.js para saber o que
+      foi digitado/escolhido e pedir à API (GET /dashboard) os indicadores já filtrados.
+      As opções de responsável e de projeto são preenchidas pelo JavaScript, com dados do banco.
     -->
     <div class="barra-filtros">
-      <input type="text" id="busca-dashboard" placeholder="Buscar por título ou responsável">
+      <input type="text" id="busca-dashboard" placeholder="Buscar por título, descrição ou responsável">
+
+      <select id="filtro-projeto">
+        <option value="">Todos os projetos</option>
+      </select>
 
       <select id="filtro-responsavel">
         <option value="">Todos os responsáveis</option>
-        <option value="Arthur de Senna">Arthur de Senna</option>
-        <option value="Gabriel Passarela">Gabriel Passarela</option>
-        <option value="Joao Victor">Joao Victor</option>
-        <option value="Kevin Lima">Kevin Lima</option>
-        <option value="Murilo Cunha">Murilo Cunha</option>
       </select>
 
       <select id="filtro-prioridade-dashboard">
@@ -102,8 +100,61 @@
 
     </section>
 
+    <h2 class="titulo-secao">Demandas por prioridade</h2>
+    <section class="grade-cards">
+      <div class="card-indicador">
+        <p class="card-titulo">Crítica</p>
+        <p class="card-valor" id="valor-prioridade-critica">0</p>
+      </div>
+      <div class="card-indicador">
+        <p class="card-titulo">Alta</p>
+        <p class="card-valor" id="valor-prioridade-alta">0</p>
+      </div>
+      <div class="card-indicador">
+        <p class="card-titulo">Média</p>
+        <p class="card-valor" id="valor-prioridade-media">0</p>
+      </div>
+      <div class="card-indicador">
+        <p class="card-titulo">Baixa</p>
+        <p class="card-valor" id="valor-prioridade-baixa">0</p>
+      </div>
+    </section>
+
+    <h2 class="titulo-secao">Demandas por tipo</h2>
+    <section class="grade-cards">
+      <div class="card-indicador">
+        <p class="card-titulo">Tarefa</p>
+        <p class="card-valor" id="valor-tipo-tarefa">0</p>
+      </div>
+      <div class="card-indicador">
+        <p class="card-titulo">Defeito</p>
+        <p class="card-valor" id="valor-tipo-defeito">0</p>
+      </div>
+      <div class="card-indicador">
+        <p class="card-titulo">Melhoria</p>
+        <p class="card-valor" id="valor-tipo-melhoria">0</p>
+      </div>
+      <div class="card-indicador">
+        <p class="card-titulo">Documentação</p>
+        <p class="card-valor" id="valor-tipo-documentacao">0</p>
+      </div>
+    </section>
+
+    <section class="grade-listas">
+      <div class="caixa-lista">
+        <h2 class="titulo-secao">Críticas em aberto</h2>
+        <ul class="lista-destaque" id="lista-criticas"></ul>
+      </div>
+      <div class="caixa-lista">
+        <h2 class="titulo-secao">Próximas do prazo (7 dias)</h2>
+        <ul class="lista-destaque" id="lista-prazo"></ul>
+      </div>
+    </section>
+
   </main>
 
+  <script src="../js/sessao.js"></script>
+  <script src="../js/api.js"></script>
   <script src="../js/dashboard.js"></script>
 </body>
 </html>

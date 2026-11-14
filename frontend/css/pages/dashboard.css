@@ -107,3 +107,58 @@
   font-weight: 700;
   color: var(--cor-texto);
 }
+
+/* --- Reunião 5: seções novas do dashboard (prioridade, tipo e listas) --- */
+
+.titulo-secao {
+  font-family: var(--fonte-destaque);
+  font-size: var(--tamanho-titulo-pequeno);
+  color: var(--cor-texto);
+  margin-top: var(--espaco-grande);
+  margin-bottom: var(--espaco-pequeno);
+}
+
+.grade-listas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-medio);
+}
+
+.caixa-lista {
+  flex: 1;
+  min-width: 320px;
+}
+
+.lista-destaque {
+  list-style: none;
+  background-color: var(--cor-fundo-card);
+  border: 2px solid var(--cor-borda-forte);
+  border-radius: var(--raio-container);
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+}
+
+.lista-destaque li {
+  display: flex;
+  flex-direction: column;
+  padding: var(--espaco-pequeno) 0;
+  border-bottom: 1px solid var(--cor-borda);
+  font-size: var(--tamanho-texto-pequeno);
+}
+
+.lista-destaque li:last-child {
+  border-bottom: none;
+}
+
+.lista-destaque a {
+  color: var(--cor-primaria);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lista-destaque a:hover {
+  text-decoration: underline;
+}
+
+.lista-destaque .detalhe-item {
+  color: var(--cor-texto-claro);
+}

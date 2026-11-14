@@ -1,0 +1,45 @@
+/* Autor: Arthur de Senna Nardi Cortina */
+/* Caixas de mensagem (erro, sucesso e aviso) mostradas ao usuário em todas as telas (Reunião 5). */
+/* São criadas pelo JavaScript (função mostrarMensagem, em js/sessao.js) dentro do <div id="areaMensagem">. */
+
+.alerta {
+  background-color: var(--cor-fundo-card);
+  border: 1px solid var(--cor-borda);
+  border-left-width: 6px;
+  border-radius: var(--raio-interativo);
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  margin-bottom: var(--espaco-medio);
+  font-size: var(--tamanho-texto-pequeno);
+  font-weight: 600;
+}
+
+.alerta ul {
+  margin: var(--espaco-pequeno) 0 0 var(--espaco-medio);
+  font-weight: 400;
+}
+
+.alerta-erro {
+  border-color: var(--cor-erro);
+  color: var(--cor-erro);
+}
+
+.alerta-sucesso {
+  border-color: var(--cor-status-concluida);
+  color: var(--cor-status-concluida);
+}
+
+.alerta-aviso {
+  border-color: var(--cor-prioridade-media);
+  color: var(--cor-prioridade-media);
+}
+
+/* Link "Sair" no menu superior, ao lado do nome do usuário */
+.link-sair {
+  color: var(--cor-primaria);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link-sair:hover {
+  text-decoration: underline;
+}
