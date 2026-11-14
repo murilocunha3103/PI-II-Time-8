@@ -232,3 +232,54 @@
 .botao-comentar:hover {
   background-color: var(--cor-primaria-escura);
 }
+
+/* --- Reunião 5: painel de atualização de status, datas do histórico e texto dos comentários --- */
+
+.painel-status {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-pequeno);
+  margin-top: var(--espaco-medio);
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-interativo);
+}
+
+/* O atributo "hidden" some com o painel; esta regra garante isso mesmo com o display: flex acima */
+.painel-status[hidden] {
+  display: none;
+}
+
+.painel-status label {
+  font-size: var(--tamanho-texto-pequeno);
+  font-weight: 600;
+  color: var(--cor-texto-claro);
+}
+
+.painel-status select {
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-interativo);
+  padding: var(--espaco-pequeno);
+  font-family: var(--fonte-padrao);
+  font-size: var(--tamanho-texto-pequeno);
+}
+
+.data-historico {
+  color: var(--cor-texto-claro);
+  font-family: var(--fonte-destaque);
+  font-size: 12px;
+  margin-left: var(--espaco-pequeno);
+}
+
+.autor-comentario {
+  font-weight: 600;
+  color: var(--cor-texto);
+}
+
+/* Mantém as quebras de linha digitadas no comentário */
+.texto-comentario {
+  display: block;
+  white-space: pre-wrap;
+  color: var(--cor-texto);
+  margin-top: 2px;
+}

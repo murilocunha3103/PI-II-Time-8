@@ -28,48 +28,58 @@
 
     <a href="demandas-lista.html" class="link-voltar">&larr; Voltar para a listagem</a>
 
-    <section class="card-demanda">
+    <!-- Aqui aparecem as mensagens de sucesso e de erro (inclusive os erros vindos da API) -->
+    <div id="areaMensagem"></div>
+
+    <!-- Os textos abaixo são preenchidos pelo JavaScript (demanda-detalhes.js) com os dados do banco -->
+    <section class="card-demanda" id="card-demanda">
 
       <div class="cabecalho-demanda">
-        <h1>Corrigir erro no login</h1>
-        <div class="etiquetas-demanda">
-          <span class="etiqueta etiqueta-critica">Crítica</span>
-          <span class="etiqueta etiqueta-aberta">Aberta</span>
-        </div>
+        <h1 id="titulo-demanda">Carregando...</h1>
+        <div class="etiquetas-demanda" id="etiquetas-demanda"></div>
       </div>
 
-      <p class="info-demanda">Projeto: Sistema de Acompanhamento de Demandas</p>
-      <p class="info-demanda">Responsável: Não atribuído</p>
-      <p class="info-demanda">Criada em: --/--/---- &nbsp;|&nbsp; Última atualização: --/--/---- &nbsp;|&nbsp; Prazo: --/--/----</p>
+      <p class="info-demanda" id="info-projeto">Projeto: --</p>
+      <p class="info-demanda" id="info-responsavel">Responsável: --</p>
+      <p class="info-demanda" id="info-datas">Criada em: --/--/---- &nbsp;|&nbsp; Última atualização: --/--/---- &nbsp;|&nbsp; Prazo: --/--/----</p>
 
       <h2 class="subtitulo-secao">Descrição</h2>
-      <p>Descrição detalhada da demanda vai aqui.</p>
+      <p id="texto-descricao"></p>
 
       <div class="linha-botoes">
-        <button class="botao-atualizar">Atualizar status</button>
-        <button class="botao-editar">Editar</button>
+        <!-- Os três botões abaixo aparecem só se o perfil do usuário permitir (a API informa em "acoes") -->
+        <button class="botao-atualizar" id="botao-atualizar-status" style="display: none;">Atualizar status</button>
+        <button class="botao-editar" id="botao-editar-demanda" style="display: none;">Editar</button>
         <!--
           id usado pelo JavaScript pra pedir uma confirmação antes de cancelar
           (evita cancelamento acidental por clique errado)
         -->
-        <button class="botao-cancelar-demanda" id="botao-cancelar-demanda">Cancelar demanda</button>
+        <button class="botao-cancelar-demanda" id="botao-cancelar-demanda" style="display: none;">Cancelar demanda</button>
+      </div>
+
+      <!-- Painel para escolher o novo status. Abre ao clicar em "Atualizar status". -->
+      <div class="painel-status" id="painel-status" hidden>
+        <label for="novo-status">Novo status</label>
+        <select id="novo-status"></select>
+        <button type="button" class="botao-atualizar" id="botao-confirmar-status">Confirmar</button>
+        <button type="button" class="botao-editar" id="botao-fechar-status">Fechar</button>
       </div>
 
     </section>
 
     <section class="card-demanda">
       <h2 class="subtitulo-secao">Histórico de alterações</h2>
-      <ul class="lista-historico">
-        <li>João alterou o status da demanda de Aberta para Em andamento.</li>
+      <ul class="lista-historico" id="lista-historico">
+        <li>Carregando histórico...</li>
       </ul>
     </section>
 
     <section class="card-demanda">
       <h2 class="subtitulo-secao">Comentários</h2>
 
-      <!-- id usado pelo JavaScript pra inserir os novos comentários aqui -->
+      <!-- id usado pelo JavaScript pra inserir os comentários aqui -->
       <ul class="lista-comentarios" id="lista-comentarios">
-        <li>Exemplo de comentário registrado por um usuário.</li>
+        <li>Carregando comentários...</li>
       </ul>
 
       <!--
@@ -86,6 +96,8 @@
 
   </main>
 
+  <script src="../js/sessao.js"></script>
+  <script src="../js/api.js"></script>
   <script src="../js/demanda-detalhes.js"></script>
 </body>
 </html>
