@@ -151,3 +151,43 @@
   font-style: italic;
   padding: var(--espaco-grande);
 }
+
+/* --- Reunião 5: mais filtros, ordenação e contagem de resultados --- */
+
+/* Com mais filtros, a barra passa a quebrar de linha em telas menores */
+.barra-filtros {
+  flex-wrap: wrap;
+}
+
+.barra-filtros input[type="text"] {
+  min-width: 260px;
+}
+
+.filtro-minhas {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--tamanho-texto-pequeno);
+  color: var(--cor-texto-claro);
+}
+
+.barra-ordenacao {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-pequeno);
+  margin-bottom: var(--espaco-medio);
+  font-size: var(--tamanho-texto-pequeno);
+  color: var(--cor-texto-claro);
+}
+
+.barra-ordenacao select {
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-interativo);
+  padding: var(--espaco-pequeno);
+  font-family: var(--fonte-padrao);
+  font-size: var(--tamanho-texto-pequeno);
+}
+
+.contagem-resultados {
+  margin-left: auto;
+}
