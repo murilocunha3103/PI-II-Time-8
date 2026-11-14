@@ -1,0 +1,53 @@
+# Autor: Murilo Xavier Sarra da Cunha
+#
+# Requisições de teste: rota GET /demandas/:id/historico (Reunião 5)
+# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como roteiro para o
+# Thunder Client: copie o método, a URL e o corpo; nas rotas que exigem login, abra a aba
+# Auth -> Bearer e cole o token recebido no POST /login.
+# Antes de testar: o banco criado (database/01 e 02), o .env configurado e o servidor rodando
+# (npm run dev na pasta backend).
+#
+# Atenção: algumas requisições ALTERAM os dados (cadastram, mudam status, cancelam). Para repetir os
+# testes do zero, rode no SQL Developer: 00_remover_tabelas.sql, 01_criar_tabelas.sql e 02_dados_teste.sql.
+
+@baseUrl = http://localhost:3000
+
+### Login como Administrador (arthur@dominio.com) -> esperado: 200, com "token" e "usuario"
+# @name admin
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "arthur@dominio.com", "senha": "Admin@123" }
+
+###
+@token_admin = {{admin.response.body.token}}
+
+### Login como Membro da Equipe (kevin@dominio.com) -> esperado: 200, com "token" e "usuario"
+# @name membro
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "kevin@dominio.com", "senha": "Membro@123" }
+
+###
+@token_membro = {{membro.response.body.token}}
+
+### 1. Histórico da demanda 3 -> 200: 3 registros, do mais recente para o mais antigo, cada um com a frase pronta em "mensagem" (ex.: "... alterou o status da demanda de Em revisão para Concluída.")
+GET {{baseUrl}}/demandas/3/historico
+Authorization: Bearer {{token_admin}}
+
+### 2. Histórico da demanda 1 -> 200: registros de responsável e de prioridade
+GET {{baseUrl}}/demandas/1/historico
+Authorization: Bearer {{token_admin}}
+
+### 3. Demanda inexistente -> 404
+GET {{baseUrl}}/demandas/999/historico
+Authorization: Bearer {{token_admin}}
+
+### 4. Demanda de um projeto que o usuário não enxerga (Kevin não está no projeto 3) -> 404
+GET {{baseUrl}}/demandas/13/historico
+Authorization: Bearer {{token_membro}}
+
+### 5. SEM token -> 401
+GET {{baseUrl}}/demandas/3/historico
+

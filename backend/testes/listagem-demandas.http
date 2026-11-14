@@ -1,71 +1,85 @@
 # Autor: Murilo Xavier Sarra da Cunha
 #
-# Requisições de teste da rota GET /demandas (Reunião 4): filtros, busca e ordenação.
-# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como
-# roteiro para o Thunder Client: copie o método e a URL de cada requisição.
-# Antes de testar, o servidor precisa estar rodando (npm run dev na pasta backend).
+# Requisições de teste: rota GET /demandas (Reunião 5): filtros, busca, ordenação e visibilidade por perfil
+# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como roteiro para o
+# Thunder Client: copie o método, a URL e o corpo; nas rotas que exigem login, abra a aba
+# Auth -> Bearer e cole o token recebido no POST /login.
+# Antes de testar: o banco criado (database/01 e 02), o .env configurado e o servidor rodando
+# (npm run dev na pasta backend).
 #
-# Observação: acentos e espaços na URL aparecem codificados (Crítica = Cr%C3%ADtica,
-# "Em andamento" = Em%20andamento). No Thunder Client e no navegador pode digitar normal.
+# Atenção: algumas requisições ALTERAM os dados (cadastram, mudam status, cancelam). Para repetir os
+# testes do zero, rode no SQL Developer: 00_remover_tabelas.sql, 01_criar_tabelas.sql e 02_dados_teste.sql.
 
 @baseUrl = http://localhost:3000
 
-### 1. Listar todas as demandas -> esperado: 200 (lista com as 18 demandas de teste)
+### Login como Líder de Projeto (murilo@dominio.com) -> esperado: 200, com "token" e "usuario"
+# @name lider
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "murilo@dominio.com", "senha": "Lider@123" }
+
+###
+@token_lider = {{lider.response.body.token}}
+
+### Login como Membro da Equipe (gabriel@dominio.com) -> esperado: 200, com "token" e "usuario"
+# @name membro
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "gabriel@dominio.com", "senha": "Membro@123" }
+
+###
+@token_membro = {{membro.response.body.token}}
+
+### 1. Listar todas -> 200: 18 demandas, cada uma com projeto, responsável (ou null), dataCriacao e prazo
+GET {{baseUrl}}/demandas
+Authorization: Bearer {{token_lider}}
+
+### 2. Filtrar por status -> 200: 5 demandas
+GET {{baseUrl}}/demandas?status=Aberta
+Authorization: Bearer {{token_lider}}
+
+### 3. Dois filtros: status Aberta + prioridade Crítica -> 200: demandas 1 e 14
+GET {{baseUrl}}/demandas?status=Aberta&prioridade=Crítica
+Authorization: Bearer {{token_lider}}
+
+### 4. Filtrar por tipo -> 200: 3 demandas
+GET {{baseUrl}}/demandas?tipo=Documentação
+Authorization: Bearer {{token_lider}}
+
+### 5. Filtrar por projeto -> 200: demandas 13, 14 e 15
+GET {{baseUrl}}/demandas?projeto=3
+Authorization: Bearer {{token_lider}}
+
+### 6. Filtrar por responsável (id 2) -> 200: 3 demandas
+GET {{baseUrl}}/demandas?responsavel=2
+Authorization: Bearer {{token_lider}}
+
+### 7. Busca por texto (título, descrição ou nome do responsável) -> 200: demandas 1 e 9
+GET {{baseUrl}}/demandas?busca=login
+Authorization: Bearer {{token_lider}}
+
+### 8. Ordenar por prazo -> 200: a demanda sem prazo (18) fica por último
+GET {{baseUrl}}/demandas?ordenarPor=prazo
+Authorization: Bearer {{token_lider}}
+
+### 9. Ordenar por prioridade, decrescente -> 200: da menos urgente (Baixa) para a mais urgente
+GET {{baseUrl}}/demandas?ordenarPor=prioridade&ordem=desc
+Authorization: Bearer {{token_lider}}
+
+### 10. O Membro Gabriel só enxerga os projetos 1 e 3 -> 200: 13 demandas
+GET {{baseUrl}}/demandas
+Authorization: Bearer {{token_membro}}
+
+### 11. Status inválido -> 400, com a lista dos valores aceitos
+GET {{baseUrl}}/demandas?status=Pendente
+Authorization: Bearer {{token_lider}}
+
+### 12. Campo de ordenação inválido -> 400
+GET {{baseUrl}}/demandas?ordenarPor=titulo
+Authorization: Bearer {{token_lider}}
+
+### 13. SEM token -> 401
 GET {{baseUrl}}/demandas
 
-### 2. Filtrar por status -> esperado: 200
-GET {{baseUrl}}/demandas?status=Aberta
-
-### 3. Filtrar por DOIS critérios: status Aberta + prioridade Crítica -> esperado: 200 (demandas 1 e 14)
-GET {{baseUrl}}/demandas?status=Aberta&prioridade=Cr%C3%ADtica
-
-### 4. Filtrar por status + tipo: Em andamento + Tarefa -> esperado: 200
-GET {{baseUrl}}/demandas?status=Em%20andamento&tipo=Tarefa
-
-### 5. Filtrar por projeto -> esperado: 200 (demandas do projeto 3)
-GET {{baseUrl}}/demandas?projeto=3
-
-### 6. Filtrar por responsável (id 2 = Murilo) e projeto -> esperado: 200
-GET {{baseUrl}}/demandas?responsavel=2&projeto=1
-
-### 7. Busca por texto no título ou na descrição -> esperado: 200
-GET {{baseUrl}}/demandas?busca=login
-
-### 8. Busca sem acento também encontra palavras com acento -> esperado: 200 (acha "comentários")
-GET {{baseUrl}}/demandas?busca=comentarios
-
-### 9. Busca que não encontra nada -> esperado: 200 com lista vazia []
-GET {{baseUrl}}/demandas?busca=zzzzzz
-
-### 10. Ordenar por prioridade (da mais urgente para a menos urgente) -> esperado: 200
-GET {{baseUrl}}/demandas?ordenarPor=prioridade
-
-### 11. Ordenar por prioridade, ordem inversa -> esperado: 200
-GET {{baseUrl}}/demandas?ordenarPor=prioridade&ordem=desc
-
-### 12. Ordenar por prazo de finalização (sem prazo vai para o final) -> esperado: 200
-GET {{baseUrl}}/demandas?ordenarPor=prazo
-
-### 13. Ordenar por data de criação -> esperado: 200
-GET {{baseUrl}}/demandas?ordenarPor=dataCriacao
-
-### 14. Ordenar por status (segue o fluxo Aberta > Em andamento > ... > Cancelada) -> esperado: 200
-GET {{baseUrl}}/demandas?ordenarPor=status
-
-### 15. Combinando: projeto 1 + busca "tela" + ordenado por prioridade -> esperado: 200
-GET {{baseUrl}}/demandas?projeto=1&busca=tela&ordenarPor=prioridade
-
-### ERRO 1: status que não existe -> esperado: 400
-GET {{baseUrl}}/demandas?status=Pendente
-
-### ERRO 2: tipo que não existe -> esperado: 400
-GET {{baseUrl}}/demandas?tipo=Bug
-
-### ERRO 3: projeto que não é número -> esperado: 400
-GET {{baseUrl}}/demandas?projeto=abc
-
-### ERRO 4: campo de ordenação inválido -> esperado: 400
-GET {{baseUrl}}/demandas?ordenarPor=titulo
-
-### ERRO 5: ordem inválida -> esperado: 400
-GET {{baseUrl}}/demandas?ordenarPor=prazo&ordem=cima
