@@ -175,4 +175,3 @@ export function registrarRotasEdicao(app: Express) {
     }
   });
 }
-s
