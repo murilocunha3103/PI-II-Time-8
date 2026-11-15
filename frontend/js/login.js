@@ -1,8 +1,15 @@
 // Autor: Gabriel Passarela Silva
 //
-// Validações em JavaScript da tela de Login (Reunião 3).
+// Validações em JavaScript e integração com a API da tela de Login (Reuniões 3 e 5).
 //
-// Regras implementadas, seguindo o item 2.1 da pauta:
+// Reunião 5: depois que os campos passam nas validações abaixo, a tela envia o e-mail e a senha para
+// a API (POST /login, função loginApi do arquivo api.js). Se estiverem certos, o token e os dados
+// do usuário são guardados na sessão (salvarSessao, do sessao.js) e a pessoa vai para o
+// Dashboard. Se a API recusar (e-mail ou senha inválidos, servidor fora do ar...), a mensagem
+// recebida é mostrada na tela, acima do formulário.
+//
+// Regras da Reunião 3, que continuam valendo. As validações da tela NÃO
+// substituem as validações da API:
 // - e-mail obrigatório e em formato válido;
 // - senha obrigatória, com regras de segurança definidas pela equipe: no mínimo
 //   8 caracteres, com pelo menos 1 letra maiúscula, 1 minúscula, 1 número e 1
@@ -18,6 +25,8 @@ const campoSenha = document.querySelector("#senha");
 
 const erroEmail = document.querySelector("#erroEmail");
 const erroSenha = document.querySelector("#erroSenha");
+
+const botaoEntrar = document.querySelector(".botao-entrar");
 
 const regraTamanho = document.querySelector("#regra-tamanho");
 const regraMaiuscula = document.querySelector("#regra-maiuscula");
@@ -115,7 +124,36 @@ formulario.addEventListener("submit", function (event) {
         return;
     }
 
-    // Ainda não existe backend de autenticação nesta etapa do projeto - isso será
-    // implementado quando o login for conectado à API, nas próximas reuniões.
-    alert("Login validado com sucesso! (a autenticação real será implementada quando o backend estiver pronto)");
+    // Campos válidos: agora a API confere o e-mail e a senha no banco de dados
+    entrarNoSistema(email, senha);
 });
+
+// Envia o login para a API. O botão fica desabilitado enquanto espera a resposta, para a pessoa
+// não clicar duas vezes.
+async function entrarNoSistema(email, senha) {
+    limparMensagem();
+    botaoEntrar.disabled = true;
+
+    try {
+        const dados = await loginApi(email, senha);
+
+        // Login certo: guarda o token e os dados do usuário e vai para o Dashboard
+        salvarSessao(dados.token, dados.usuario);
+        irPara("dashboard.html");
+    } catch (erro) {
+        // Mostra a mensagem enviada pela API (401: e-mail ou senha inválidos, etc.)
+        mostrarErroDaApi(erro);
+    } finally {
+        botaoEntrar.disabled = false;
+    }
+}
+
+// Se a pessoa já está logada, não precisa ver a tela de login: vai direto para o Dashboard
+if (estaLogado()) {
+    irPara("dashboard.html");
+}
+
+// Se a pessoa foi mandada de volta para cá porque a sessão venceu, avisa o motivo
+if (window.location.search.indexOf("aviso=expirada") !== -1) {
+    mostrarMensagem("aviso", "Sua sessão expirou. Entre novamente.");
+}
