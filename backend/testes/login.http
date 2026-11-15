@@ -1,70 +1,119 @@
 # Autor: Gabriel Passarela Silva
 #
-# Requisições de teste das rotas POST /login e GET /usuarios (Reunião 4).
-# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como
-# roteiro para o Thunder Client: copie o método, a URL e o corpo (JSON) de cada requisição.
-# Antes de testar, o servidor precisa estar rodando (npm run dev na pasta backend).
+# Requisições de teste: rotas POST /login, GET /usuarios e GET /feriados/verificar (Reunião 5)
+# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como roteiro para o
+# Thunder Client: copie o método, a URL e o corpo; nas rotas que exigem login, abra a aba
+# Auth -> Bearer e cole o token recebido no POST /login.
+# Antes de testar: o banco criado (database/01 e 02), o .env configurado e o servidor rodando
+# (npm run dev na pasta backend).
+#
+# Atenção: algumas requisições ALTERAM os dados (cadastram, mudam status, cancelam). Para repetir os
+# testes do zero, rode no SQL Developer: 00_remover_tabelas.sql, 01_criar_tabelas.sql e 02_dados_teste.sql.
 
 @baseUrl = http://localhost:3000
 
-### 1. Login válido (Membro da Equipe) -> esperado: 200, com os dados do usuário e SEM a senha
+### 1. Login do Administrador -> 200: token e usuario (sem a senha)
 POST {{baseUrl}}/login
 Content-Type: application/json
 
-{
-  "email": "gabriel@dominio.com",
-  "senha": "Membro@123"
-}
+{ "email": "arthur@dominio.com", "senha": "Admin@123" }
 
-### 2. Login válido (Administrador) -> esperado: 200
+### 2. Login do Líder -> 200
 POST {{baseUrl}}/login
 Content-Type: application/json
 
-{
-  "email": "arthur@dominio.com",
-  "senha": "Admin@123"
-}
+{ "email": "murilo@dominio.com", "senha": "Lider@123" }
 
-### 3. Login válido (Líder de Projeto) -> esperado: 200
+### 3. Login do Membro (e-mail em maiúsculas funciona) -> 200
 POST {{baseUrl}}/login
 Content-Type: application/json
 
-{
-  "email": "murilo@dominio.com",
-  "senha": "Lider@123"
-}
+{ "email": "GABRIEL@dominio.com", "senha": "Membro@123" }
 
-### 4. Listar usuários -> esperado: 200, lista sem as senhas
+### 4. Senha errada -> 401 (E-mail ou senha inválidos.)
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "gabriel@dominio.com", "senha": "SenhaErrada1!" }
+
+### 5. E-mail que não existe -> 401 (a mesma mensagem, para não revelar quais e-mails existem)
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "naoexiste@dominio.com", "senha": "Membro@123" }
+
+### 6. Sem a senha -> 400
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "gabriel@dominio.com" }
+
+### 7. Corpo que não é JSON válido -> 400
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": 
+
+### Login do Administrador, para pegar o token usado nas próximas requisições
+# @name admin
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "arthur@dominio.com", "senha": "Admin@123" }
+
+###
+@token_admin = {{admin.response.body.token}}
+
+### Login do Membro Gabriel (projetos 1 e 3)
+# @name membro
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "gabriel@dominio.com", "senha": "Membro@123" }
+
+###
+@token_membro = {{membro.response.body.token}}
+
+### 8. Listar usuários (Administrador) -> 200: 5 usuários, sem senha
+GET {{baseUrl}}/usuarios
+Authorization: Bearer {{token_admin}}
+
+### 9. Usuários do projeto 2 -> 200: Murilo, Joao e Kevin
+GET {{baseUrl}}/usuarios?projeto=2
+Authorization: Bearer {{token_admin}}
+
+### 10. Membro que não enxerga o projeto 2 -> 404
+GET {{baseUrl}}/usuarios?projeto=2
+Authorization: Bearer {{token_membro}}
+
+### 11. Projeto que não é número -> 400
+GET {{baseUrl}}/usuarios?projeto=abc
+Authorization: Bearer {{token_admin}}
+
+### 12. SEM token -> 401
 GET {{baseUrl}}/usuarios
 
-### ERRO 1: senha ausente -> esperado: 400
-POST {{baseUrl}}/login
-Content-Type: application/json
+### 13. Feriado: 25/12/2026 -> 200: feriado true, nome Natal (fonte: api, ou local se estiver sem internet)
+GET {{baseUrl}}/feriados/verificar?data=2026-12-25
+Authorization: Bearer {{token_admin}}
 
-{
-  "email": "gabriel@dominio.com"
-}
+### 14. Dia comum: 26/12/2026 -> 200: feriado false
+GET {{baseUrl}}/feriados/verificar?data=2026-12-26
+Authorization: Bearer {{token_admin}}
 
-### ERRO 2: corpo vazio -> esperado: 400
-POST {{baseUrl}}/login
-Content-Type: application/json
+### 15. Sexta-feira Santa de 2027 (26/03/2027) -> 200: feriado true
+GET {{baseUrl}}/feriados/verificar?data=2027-03-26
+Authorization: Bearer {{token_admin}}
 
-{}
+### 16. Sem informar a data -> 400
+GET {{baseUrl}}/feriados/verificar
+Authorization: Bearer {{token_admin}}
 
-### ERRO 3: senha incorreta -> esperado: 401
-POST {{baseUrl}}/login
-Content-Type: application/json
+### 17. Data inexistente -> 400
+GET {{baseUrl}}/feriados/verificar?data=2026-02-31
+Authorization: Bearer {{token_admin}}
 
-{
-  "email": "gabriel@dominio.com",
-  "senha": "SenhaErrada1!"
-}
+### 18. Data em formato errado -> 400
+GET {{baseUrl}}/feriados/verificar?data=25/12/2026
+Authorization: Bearer {{token_admin}}
 
-### ERRO 4: e-mail que não está cadastrado -> esperado: 401
-POST {{baseUrl}}/login
-Content-Type: application/json
-
-{
-  "email": "naoexiste@dominio.com",
-  "senha": "Membro@123"
-}
