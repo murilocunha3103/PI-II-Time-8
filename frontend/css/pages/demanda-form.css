@@ -1,4 +1,4 @@
-/* Autor: Kevin Eziquiel Lima */
+/* Autor: Gabriel Passarela Silva */
 /* CSS da tela: demanda-form */
 
 .barra-navegacao {
@@ -165,4 +165,18 @@
 
 .botao-cancelar:hover {
   background-color: var(--cor-fundo);
+}
+
+/* --- Reunião 5: estados do botão e dos campos durante o envio e na edição --- */
+
+.botao-salvar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Campos que não podem ser mudados (por exemplo, o projeto de uma demanda já cadastrada) */
+.campo select:disabled {
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-claro);
+  cursor: not-allowed;
 }
