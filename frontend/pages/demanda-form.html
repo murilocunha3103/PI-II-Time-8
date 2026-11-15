@@ -1,4 +1,4 @@
-<!-- Autor: Kevin Eziquiel Lima -->
+<!-- Autor: Gabriel Passarela Silva -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -25,12 +25,16 @@
 
   <main class="conteudo">
 
-    <h1>Nova demanda</h1>
+    <h1 id="titulo-pagina">Nova demanda</h1>
+
+    <!-- Aqui aparecem as mensagens de erro vindas da API (por exemplo, prazo em feriado nacional) -->
+    <div id="areaMensagem"></div>
 
     <!--
       novalidate: desliga a validação automática do navegador, porque quem vai
       validar e mostrar as mensagens de erro é o nosso próprio JavaScript
-      (demanda-form.js), como pede a Reunião 3.
+      (demanda-form.js), como pede a Reunião 3. A Reunião 5 usa este mesmo
+      formulário para CADASTRAR e para EDITAR uma demanda (demanda-form.html?id=3).
     -->
     <form class="caixa-formulario" id="formulario-demanda" novalidate>
 
@@ -44,6 +48,15 @@
         <label for="descricao">Descrição</label>
         <textarea id="descricao" name="descricao" rows="4" placeholder="Descreva a demanda"></textarea>
         <span class="mensagem-erro" id="erroDescricao"></span>
+      </div>
+
+      <div class="campo">
+        <label for="projeto">Projeto</label>
+        <!-- As opções são preenchidas pelo JavaScript, com os projetos que o usuário enxerga (GET /projetos) -->
+        <select id="projeto" name="projeto">
+          <option value="">Selecione o projeto</option>
+        </select>
+        <span class="mensagem-erro" id="erroProjeto"></span>
       </div>
 
       <div class="campo">
@@ -68,6 +81,7 @@
 
       <div class="campo">
         <label for="responsavel">Responsável</label>
+        <!-- As opções são os usuários vinculados ao projeto escolhido (GET /usuarios?projeto=...) -->
         <select id="responsavel" name="responsavel">
           <option value="">Sem responsável definido</option>
         </select>
@@ -80,19 +94,20 @@
       </div>
 
       <div class="linha-botoes">
-        <button type="submit" class="botao-salvar">Salvar demanda</button>
-        <a href="demandas-lista.html" class="botao-cancelar">Cancelar</a>
+        <button type="submit" class="botao-salvar" id="botao-salvar">Salvar demanda</button>
+        <a href="demandas-lista.html" class="botao-cancelar" id="link-cancelar">Cancelar</a>
       </div>
 
       <p class="mensagem-sucesso" id="mensagem-sucesso">
-        Demanda validada com sucesso! (o envio real para o backend será implementado
-        em uma etapa futura, quando o servidor tiver as rotas de demandas prontas)
+        Demanda salva com sucesso! Abrindo os detalhes...
       </p>
 
     </form>
 
   </main>
 
+  <script src="../js/sessao.js"></script>
+  <script src="../js/api.js"></script>
   <script src="../js/demanda-form.js"></script>
 </body>
 </html>
