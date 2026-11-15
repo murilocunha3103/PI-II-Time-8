@@ -98,3 +98,10 @@
 .botao-entrar:hover {
   background-color: var(--cor-primaria-escura);
 }
+
+/* Botão desabilitado enquanto a tela espera a resposta da API (Reunião 5) */
+.botao-entrar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+  
