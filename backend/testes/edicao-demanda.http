@@ -1,0 +1,130 @@
+# Autor: Gabriel Passarela Silva
+#
+# Requisições de teste: rota PUT /demandas/:id (Reunião 5): edição, responsável, prioridade e prazo
+# Formato .http (funciona com a extensão REST Client do VS Code). Também serve como roteiro para o
+# Thunder Client: copie o método, a URL e o corpo; nas rotas que exigem login, abra a aba
+# Auth -> Bearer e cole o token recebido no POST /login.
+# Antes de testar: o banco criado (database/01 e 02), o .env configurado e o servidor rodando
+# (npm run dev na pasta backend).
+#
+# Atenção: algumas requisições ALTERAM os dados (cadastram, mudam status, cancelam). Para repetir os
+# testes do zero, rode no SQL Developer: 00_remover_tabelas.sql, 01_criar_tabelas.sql e 02_dados_teste.sql.
+# Troque as datas de prazo (2027-03-10) por uma data futura que não seja feriado nacional, se o teste for feito depois dela.
+
+@baseUrl = http://localhost:3000
+
+### Login como Líder de Projeto (murilo@dominio.com) -> esperado: 200, com "token" e "usuario"
+# @name lider
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "murilo@dominio.com", "senha": "Lider@123" }
+
+###
+@token_lider = {{lider.response.body.token}}
+
+### Login como Membro da Equipe (gabriel@dominio.com) -> esperado: 200, com "token" e "usuario"
+# @name membro
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{ "email": "gabriel@dominio.com", "senha": "Membro@123" }
+
+###
+@token_membro = {{membro.response.body.token}}
+
+### 0. Ver a demanda 2 antes de editar -> 200. Guardamos o prazo atual dela para a requisição 1 (as datas dos dados de teste mudam conforme o dia da carga)
+# @name demanda2
+GET {{baseUrl}}/demandas/2
+Authorization: Bearer {{token_lider}}
+
+###
+@prazo2 = {{demanda2.response.body.prazo}}
+
+### 1. Editar o título e a descrição da demanda 2, mantendo o prazo -> 200: dataAtualizacao muda e NÃO entra nada no histórico
+PUT {{baseUrl}}/demandas/2
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "titulo": "Criar tela de dashboard (editada)", "descricao": "Montar a tela do dashboard com os indicadores do sistema.", "tipo": "Tarefa", "prioridade": "Alta", "responsavelId": 1, "prazo": "{{prazo2}}" }
+
+### 2. Alterar prioridade, responsável e prazo -> 200: 3 registros novos no histórico (PRIORIDADE, RESPONSAVEL e PRAZO), feitos por Murilo
+PUT {{baseUrl}}/demandas/2
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "titulo": "Criar tela de dashboard (editada)", "descricao": "Montar a tela do dashboard com os indicadores do sistema.", "tipo": "Tarefa", "prioridade": "Baixa", "responsavelId": 3, "prazo": "2027-03-10" }
+
+### 3. Conferir o histórico -> 200: as frases de prioridade, responsável e prazo
+GET {{baseUrl}}/demandas/2/historico
+Authorization: Bearer {{token_lider}}
+
+### 4. Remover o responsável e o prazo (em branco) -> 200: responsavel e prazo = null
+PUT {{baseUrl}}/demandas/2
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "titulo": "Criar tela de dashboard (editada)", "descricao": "Montar a tela do dashboard com os indicadores do sistema.", "tipo": "Tarefa", "prioridade": "Baixa", "responsavelId": null, "prazo": "" }
+
+### 5. O Membro NÃO edita -> 403
+PUT {{baseUrl}}/demandas/2
+Authorization: Bearer {{token_membro}}
+Content-Type: application/json
+
+{ "titulo": "Tentativa do Membro", "descricao": "Montar a tela do dashboard com os indicadores do sistema.", "tipo": "Tarefa", "prioridade": "Alta" }
+
+### 6. Corpo vazio -> 400, com a lista de problemas em "erros"
+PUT {{baseUrl}}/demandas/2
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{}
+
+### 7. Novo prazo em feriado nacional (Natal) -> 400
+PUT {{baseUrl}}/demandas/2
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "titulo": "Criar tela de dashboard (editada)", "descricao": "Montar a tela do dashboard com os indicadores do sistema.", "tipo": "Tarefa", "prioridade": "Alta", "prazo": "2026-12-25" }
+
+### 8. Novo prazo no passado -> 400
+PUT {{baseUrl}}/demandas/2
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "titulo": "Criar tela de dashboard (editada)", "descricao": "Montar a tela do dashboard com os indicadores do sistema.", "tipo": "Tarefa", "prioridade": "Alta", "prazo": "2020-01-10" }
+
+### 9. Responsável que não está no projeto (demanda 13 é do projeto 3; Kevin, id 5, não está nele) -> 400
+PUT {{baseUrl}}/demandas/13
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "titulo": "Responsável fora do projeto", "descricao": "Descrição da demanda 13.", "tipo": "Defeito", "prioridade": "Crítica", "responsavelId": 5 }
+
+### 10. Editar demanda ATRASADA (14) sem mexer no prazo -> 200 (o prazo antigo não é revalidado)
+PUT {{baseUrl}}/demandas/14
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "titulo": "Cadastro duplicado de autores (corrigido)", "descricao": "Ao cadastrar um autor com o mesmo nome, o sistema cria dois registros.", "tipo": "Defeito", "prioridade": "Crítica", "responsavelId": null, "prazo": null }
+
+### 11. Editar demanda Concluída (3) -> 400 (demandas finalizadas não são editadas)
+PUT {{baseUrl}}/demandas/3
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "titulo": "Tentativa em demanda concluída", "descricao": "Montar a tela do dashboard com os indicadores do sistema.", "tipo": "Tarefa", "prioridade": "Alta" }
+
+### 12. Demanda inexistente -> 404
+PUT {{baseUrl}}/demandas/999
+Authorization: Bearer {{token_lider}}
+Content-Type: application/json
+
+{ "titulo": "Inexistente", "descricao": "Montar a tela do dashboard com os indicadores do sistema.", "tipo": "Tarefa", "prioridade": "Alta" }
+
+### 13. SEM token -> 401
+PUT {{baseUrl}}/demandas/2
+Content-Type: application/json
+
+{ "titulo": "Sem token", "descricao": "Montar a tela do dashboard com os indicadores do sistema.", "tipo": "Tarefa", "prioridade": "Alta" }
+
